@@ -43,6 +43,7 @@ import org.obo.datamodel.impl.OBOClassImpl
 import org.phenoscape.io.NeXMLWriter
 import java.util.UUID
 import java.util.Date
+import org.phenoscape.model.AssociationSupport
 
 object ConstructPresenceAbsenceMatrix extends App {
 
@@ -106,7 +107,7 @@ object ConstructPresenceAbsenceMatrix extends App {
   case object Presence extends PresenceAbsence("1", "present")
   def mergeIntoMatrix(association: Association, presenceAbsence: PresenceAbsence, assertions: Set[Association]): Unit = {
     val character = characters.getOrElseUpdate(association.entity, {
-      val newChar = new Character()
+      val newChar = new Character(association.entity)
       newChar.setLabel(association.entityLabel)
       dataset.addCharacter(newChar)
       newChar
@@ -118,8 +119,6 @@ object ConstructPresenceAbsenceMatrix extends App {
       newState.setLabel(presenceAbsence.label)
       newState
     })
-    val previousLabel = if (state.getLabel == null) "" else s", ${state.getLabel}"
-    state.setLabel(s"${association.stateLabel}[${association.matrixLabel}]$previousLabel")
     //if (assertions(association)) state.setComment("asserted") TODO add this
     if (!character.getStates.contains(state)) character.addState(state)
     val taxon = taxa.getOrElseUpdate(association.taxon, {
@@ -132,11 +131,13 @@ object ConstructPresenceAbsenceMatrix extends App {
     })
     val currentState = dataset.getStateForTaxon(taxon, character)
     val stateToAssign = currentState match {
-      case polymorphic: MultipleState => addStateToMultiState(polymorphic, state);
-      case null => state;
-      case _ => new MultipleState(Set(currentState, state), MODE.POLYMORPHIC);
+      case polymorphic: MultipleState => addStateToMultiState(polymorphic, state)
+      case null => state
+      case _ => new MultipleState(Set(currentState, state), MODE.POLYMORPHIC)
     }
-    dataset.setStateForTaxon(taxon, character, stateToAssign);
+    dataset.setStateForTaxon(taxon, character, stateToAssign)
+    val supports = dataset.getAssociationSupport.getOrElseUpdate(new org.phenoscape.model.Association(taxon.getNexmlID, character.getNexmlID, state.getNexmlID), mutable.Set[AssociationSupport]())
+    supports.add(new AssociationSupport(association.stateLabel, association.matrixLabel))
   }
   inferredAbsenceAssociations foreach (mergeIntoMatrix(_, Absence, assertedAbsenceAssociations))
   inferredPresenceAssociations foreach (mergeIntoMatrix(_, Presence, assertedPresenceAssociations))
