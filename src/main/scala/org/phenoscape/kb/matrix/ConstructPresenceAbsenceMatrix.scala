@@ -76,7 +76,7 @@ object ConstructPresenceAbsenceMatrix extends App {
   val taxonomicExpression = ManchesterSyntaxClassExpressionParser.parse(Source.fromFile(taxonomicExpressionFile, "utf-8").mkString).getOrElse {
     throw new Exception("Unparsable taxonomic expression")
   }
-  def createAssocation(result: BindingSet): Association = {
+  def createAssociation(result: BindingSet): Association = {
     Association(result.getValue("entity").stringValue, result.getValue("entity_label").stringValue,
       result.getValue("taxon").stringValue, result.getValue("taxon_label").stringValue,
       result.getValue("state").stringValue, result.getValue("state_label").stringValue,
@@ -86,11 +86,15 @@ object ConstructPresenceAbsenceMatrix extends App {
     val builtQuery = queryBuilder(anatomicalExpression, taxonomicExpression)
     val bigdataQuery = connection.prepareTupleQuery(QueryLanguage.SPARQL, builtQuery.toString)
     val result = bigdataQuery.evaluate
-    val associations = (result map createAssocation).toSet
+    val associations = (result map createAssociation).toSet
     result.close()
     associations
   }
-  def addStateToMultiState(multi: MultipleState, state: State): MultipleState = new MultipleState(multi.getStates + state, multi.getMode)
+  def addStateToMultiState(multi: MultipleState, state: State): MultipleState = {
+    if (multi.getStates map (_.getNexmlID) contains state.getNexmlID) multi
+    else new MultipleState(multi.getStates + state, multi.getMode)
+
+  }
   val assertedAbsenceAssociations = runQuery(builder.assertedAbsenceQuery)
   val assertedPresenceAssociations = runQuery(builder.assertedPresenceQuery)
   val inferredAbsenceAssociations = runQuery(builder.absenceQuery)
@@ -122,7 +126,7 @@ object ConstructPresenceAbsenceMatrix extends App {
     //if (assertions(association)) state.setComment("asserted") TODO add this
     if (!character.getStates.contains(state)) character.addState(state)
     val taxon = taxa.getOrElseUpdate(association.taxon, {
-      val newTaxon = new Taxon()
+      val newTaxon = new Taxon(association.taxon)
       newTaxon.setPublicationName(association.taxonLabel)
       val oboID = NeXMLUtil.oboID(URI.create(association.taxon))
       newTaxon.setValidName(new OBOClassImpl(oboID))
@@ -132,15 +136,20 @@ object ConstructPresenceAbsenceMatrix extends App {
     val currentState = dataset.getStateForTaxon(taxon, character)
     val stateToAssign = currentState match {
       case polymorphic: MultipleState => addStateToMultiState(polymorphic, state)
+      case `state` => state
       case null => state
       case _ => new MultipleState(Set(currentState, state), MODE.POLYMORPHIC)
     }
     dataset.setStateForTaxon(taxon, character, stateToAssign)
     val supports = dataset.getAssociationSupport.getOrElseUpdate(new org.phenoscape.model.Association(taxon.getNexmlID, character.getNexmlID, state.getNexmlID), mutable.Set[AssociationSupport]())
-    supports.add(new AssociationSupport(association.stateLabel, association.matrixLabel))
+    supports.add(AssociationSupport.create(association.stateLabel, association.matrixLabel))
   }
-  inferredAbsenceAssociations foreach (mergeIntoMatrix(_, Absence, assertedAbsenceAssociations))
-  inferredPresenceAssociations foreach (mergeIntoMatrix(_, Presence, assertedPresenceAssociations))
+  val absentEntities = inferredAbsenceAssociations map (_.entity)
+  val presentEntities = inferredPresenceAssociations map (_.entity)
+  val informativeEntities = absentEntities & presentEntities
+  //TODO make "only informative" a runtime option
+  inferredAbsenceAssociations filter (informativeEntities contains _.entity) foreach (mergeIntoMatrix(_, Absence, assertedAbsenceAssociations))
+  inferredPresenceAssociations filter (informativeEntities contains _.entity) foreach (mergeIntoMatrix(_, Presence, assertedPresenceAssociations))
   val writer = new NeXMLWriter(UUID.randomUUID.toString);
   writer.setDataSet(dataset);
   writer.write(new File(resultFile));
