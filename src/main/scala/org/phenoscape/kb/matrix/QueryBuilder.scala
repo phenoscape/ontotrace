@@ -23,6 +23,7 @@ class QueryBuilder(owlReasoner: OWLReasoner) {
   val entity_term = factory.getOWLObjectProperty(IRI.create("http://example.org/entity_term"))
   val quality_term = factory.getOWLObjectProperty(IRI.create("http://example.org/quality_term"))
   val Present = factory.getOWLClass(IRI.create("http://purl.obolibrary.org/obo/PATO_0000467"))
+  val Count = factory.getOWLClass(IRI.create("http://purl.obolibrary.org/obo/PATO_0000070"))
 
   def assertedAbsenceQuery(anatomicalExpression: OWLClassExpression, taxonomicExpression: OWLClassExpression): Query = {
     select_distinct('entity, 'entity_label, 'taxon, 'taxon_label, 'state, 'state_label, 'matrix_label) from "http://kb.phenoscape.org/" where (
@@ -47,7 +48,8 @@ class QueryBuilder(owlReasoner: OWLReasoner) {
     select_distinct('entity, 'entity_label, 'taxon, 'taxon_label, 'state, 'state_label, 'matrix_label) from "http://kb.phenoscape.org/" where (
       bgp(
         t('character, entity_term, 'entity),
-        t('character, quality_term, Present),
+        // Using "count" assumes that all absences have been translated into lacks_all_parts_of_type.
+        t('character, quality_term, Count),
         t('eq, rdfsSubClassOf, 'character),
         t('entity, rdfsLabel, 'entity_label),
         t('state, DENOTES_EXHIBITING / rdfType, 'eq),
