@@ -123,7 +123,6 @@ object ConstructPresenceAbsenceMatrix extends App {
       newState.setLabel(presenceAbsence.label)
       newState
     })
-    //if (assertions(association)) state.setComment("asserted") TODO add this
     if (!character.getStates.contains(state)) character.addState(state)
     val taxon = taxa.getOrElseUpdate(association.taxon, {
       val newTaxon = new Taxon(association.taxon)
@@ -142,7 +141,7 @@ object ConstructPresenceAbsenceMatrix extends App {
     }
     dataset.setStateForTaxon(taxon, character, stateToAssign)
     val supports = dataset.getAssociationSupport.getOrElseUpdate(new org.phenoscape.model.Association(taxon.getNexmlID, character.getNexmlID, state.getNexmlID), mutable.Set[AssociationSupport]())
-    supports.add(AssociationSupport.create(association.stateLabel, association.matrixLabel))
+    supports.add(AssociationSupport.create(association.stateLabel, association.matrixLabel, assertions(association)))
   }
   val absentEntities = inferredAbsenceAssociations map (_.entity)
   val presentEntities = inferredPresenceAssociations map (_.entity)
@@ -153,4 +152,5 @@ object ConstructPresenceAbsenceMatrix extends App {
   val writer = new NeXMLWriter(UUID.randomUUID.toString);
   writer.setDataSet(dataset);
   writer.write(new File(resultFile));
+
 }
