@@ -44,6 +44,7 @@ import org.phenoscape.io.NeXMLWriter
 import java.util.UUID
 import java.util.Date
 import org.phenoscape.model.AssociationSupport
+import org.phenoscape.owl.Vocab
 
 object ConstructPresenceAbsenceMatrix extends App {
 
@@ -77,10 +78,12 @@ object ConstructPresenceAbsenceMatrix extends App {
     throw new Exception("Unparsable taxonomic expression")
   }
   def createAssociation(result: BindingSet): Association = {
+    val presentOrAbsent = Set(Vocab.PRESENT.toString, Vocab.ABSENT.toString)
+    val direct = (result.getValue("entity") == result.getValue("curated_entity")) && (presentOrAbsent(result.getValue("curated_quality").stringValue))
     Association(result.getValue("entity").stringValue, result.getValue("entity_label").stringValue,
       result.getValue("taxon").stringValue, result.getValue("taxon_label").stringValue,
       result.getValue("state").stringValue, result.getValue("state_label").stringValue,
-      result.getValue("matrix_label").stringValue)
+      result.getValue("matrix_label").stringValue, direct)
   }
   def runQuery(queryBuilder: (OWLClassExpression, OWLClassExpression) => Query): Set[Association] = {
     val builtQuery = queryBuilder(anatomicalExpression, taxonomicExpression)
@@ -95,8 +98,6 @@ object ConstructPresenceAbsenceMatrix extends App {
     else new MultipleState(multi.getStates + state, multi.getMode)
 
   }
-  val assertedAbsenceAssociations = runQuery(builder.assertedAbsenceQuery)
-  val assertedPresenceAssociations = runQuery(builder.assertedPresenceQuery)
   val inferredAbsenceAssociations = runQuery(builder.absenceQuery)
   val inferredPresenceAssociations = runQuery(builder.presenceQuery)
   reasoner.dispose()
@@ -109,7 +110,7 @@ object ConstructPresenceAbsenceMatrix extends App {
   sealed abstract class PresenceAbsence(val symbol: String, val label: String)
   case object Absence extends PresenceAbsence("0", "absent")
   case object Presence extends PresenceAbsence("1", "present")
-  def mergeIntoMatrix(association: Association, presenceAbsence: PresenceAbsence, assertions: Set[Association]): Unit = {
+  def mergeIntoMatrix(association: Association, presenceAbsence: PresenceAbsence): Unit = {
     val character = characters.getOrElseUpdate(association.entity, {
       val newChar = new Character(association.entity)
       newChar.setLabel(association.entityLabel)
@@ -141,14 +142,14 @@ object ConstructPresenceAbsenceMatrix extends App {
     }
     dataset.setStateForTaxon(taxon, character, stateToAssign)
     val supports = dataset.getAssociationSupport.getOrElseUpdate(new org.phenoscape.model.Association(taxon.getNexmlID, character.getNexmlID, state.getNexmlID), mutable.Set[AssociationSupport]())
-    supports.add(AssociationSupport.create(association.stateLabel, association.matrixLabel, assertions(association)))
+    supports.add(new AssociationSupport(association.stateLabel, association.matrixLabel, association.direct))
   }
   val absentEntities = inferredAbsenceAssociations map (_.entity)
   val presentEntities = inferredPresenceAssociations map (_.entity)
   val informativeEntities = absentEntities & presentEntities
   //TODO make "only informative" a runtime option
-  inferredAbsenceAssociations filter (informativeEntities contains _.entity) foreach (mergeIntoMatrix(_, Absence, assertedAbsenceAssociations))
-  inferredPresenceAssociations filter (informativeEntities contains _.entity) foreach (mergeIntoMatrix(_, Presence, assertedPresenceAssociations))
+  inferredAbsenceAssociations filter (informativeEntities contains _.entity) foreach (mergeIntoMatrix(_, Absence))
+  inferredPresenceAssociations filter (informativeEntities contains _.entity) foreach (mergeIntoMatrix(_, Presence))
   val writer = new NeXMLWriter(UUID.randomUUID.toString);
   writer.setDataSet(dataset);
   writer.write(new File(resultFile));

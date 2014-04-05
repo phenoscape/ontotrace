@@ -67,9 +67,11 @@ class QueryBuilder(owlReasoner: OWLReasoner) {
 
   def absenceQuery(anatomicalExpression: OWLClassExpression, taxonomicExpression: OWLClassExpression): Query = {
 
-    select_distinct('entity, 'entity_label, 'taxon, 'taxon_label, 'state, 'state_label, 'matrix_label) from "http://kb.phenoscape.org/" where (
+    select_distinct('entity, 'entity_label, 'taxon, 'taxon_label, 'state, 'state_label, 'matrix_label, 'curated_entity, 'curated_quality) from "http://kb.phenoscape.org/" where (
       bgp(
         t('eq, rdfsSubClassOf*, 'absence),
+        t('eq, Vocab.entity_term, 'curated_entity),
+        t('eq, Vocab.quality_term, 'curated_quality),
         t('absence, ABSENCE_OF, 'entity),
         t('entity, rdfsLabel, 'entity_label),
         t('state, DENOTES_EXHIBITING / rdfType, 'eq),
@@ -88,9 +90,11 @@ class QueryBuilder(owlReasoner: OWLReasoner) {
 
   def presenceQuery(anatomicalExpression: OWLClassExpression, taxonomicExpression: OWLClassExpression): Query = {
 
-    select_distinct('entity, 'entity_label, 'taxon, 'taxon_label, 'state, 'state_label, 'matrix_label) from "http://kb.phenoscape.org/" where (
+    select_distinct('entity, 'entity_label, 'taxon, 'taxon_label, 'state, 'state_label, 'matrix_label, 'curated_entity, 'curated_quality) from "http://kb.phenoscape.org/" where (
       bgp(
         t('eq, rdfsSubClassOf*, 'presence),
+        t('eq, Vocab.entity_term, 'curated_entity),
+        t('eq, Vocab.quality_term, 'curated_quality),
         t('presence, implies_presence_of_some, 'entity),
         t('entity, rdfsLabel, 'entity_label),
         t('state, DENOTES_EXHIBITING / rdfType, 'eq),
