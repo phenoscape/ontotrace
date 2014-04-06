@@ -51,12 +51,17 @@ object ConstructPresenceAbsenceMatrix extends App {
   BasicConfigurator.configure()
   Logger.getRootLogger().setLevel(Level.WARN)
 
-  val propertiesFile = args(0)
-  val journalFile = args(1)
-  val tboxFile = args(2)
-  val anatomicalExpressionFile = args(3)
-  val taxonomicExpressionFile = args(4)
-  val resultFile = args(5)
+  val informative = args(0) match {
+    case "--informative" => true
+    case "--all" => false
+    case _ => throw new Exception("Must specify --informative or --all")
+  }
+  val propertiesFile = args(1)
+  val journalFile = args(2)
+  val tboxFile = args(3)
+  val anatomicalExpressionFile = args(4)
+  val taxonomicExpressionFile = args(5)
+  val resultFile = args(6)
 
   val bigdataProperties = new Properties()
   bigdataProperties.load(new FileReader(propertiesFile))
@@ -144,12 +149,17 @@ object ConstructPresenceAbsenceMatrix extends App {
     val supports = dataset.getAssociationSupport.getOrElseUpdate(new org.phenoscape.model.Association(taxon.getNexmlID, character.getNexmlID, state.getNexmlID), mutable.Set[AssociationSupport]())
     supports.add(new AssociationSupport(association.stateLabel, association.matrixLabel, association.direct))
   }
-  val absentEntities = inferredAbsenceAssociations map (_.entity)
-  val presentEntities = inferredPresenceAssociations map (_.entity)
-  val informativeEntities = absentEntities & presentEntities
-  //TODO make "only informative" a runtime option
-  inferredAbsenceAssociations filter (informativeEntities contains _.entity) foreach (mergeIntoMatrix(_, Absence))
-  inferredPresenceAssociations filter (informativeEntities contains _.entity) foreach (mergeIntoMatrix(_, Presence))
+  if (informative) {
+    val absentEntities = inferredAbsenceAssociations map (_.entity)
+    val presentEntities = inferredPresenceAssociations map (_.entity)
+    val informativeEntities = absentEntities & presentEntities
+    inferredAbsenceAssociations filter (informativeEntities contains _.entity) foreach (mergeIntoMatrix(_, Absence))
+    inferredPresenceAssociations filter (informativeEntities contains _.entity) foreach (mergeIntoMatrix(_, Presence))
+  } else {
+    inferredAbsenceAssociations foreach (mergeIntoMatrix(_, Absence))
+    inferredPresenceAssociations foreach (mergeIntoMatrix(_, Presence))
+  }
+
   val writer = new NeXMLWriter(UUID.randomUUID.toString);
   writer.setDataSet(dataset);
   writer.write(new File(resultFile));
