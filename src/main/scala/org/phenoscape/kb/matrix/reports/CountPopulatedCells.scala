@@ -25,9 +25,6 @@ object CountPopulatedCells extends App {
   }
   println("Number of characters with no asserted cells: " + charactersWithoutAssertedCells.keys.size)
   val idToCharacterLabel = (dataset.getCharacters map { c => (c.getNexmlID -> c.getLabel) }).toMap
-  for (id <- charactersWithoutAssertedCells.keys) {
-    println(idToCharacterLabel(id))
-  }
 
   val presenceAssociations = associations filter { case (association, supports) => association.getStateID.endsWith("1") }
   println("Number of presence associations: " + presenceAssociations.keys.size)
@@ -51,6 +48,6 @@ object CountPopulatedCells extends App {
   val charactersMadeInformativeByInferredPresences = charactersWithAssertedAbsences.keys.toSet & charactersWithoutAssertedPresences.keys.toSet
   println("Number of characters made informative by inferred absences: " + charactersMadeInformativeByInferredAbsences.size)
   println("Number of characters made informative by inferred presences: " + charactersMadeInformativeByInferredPresences.size)
-  println((charactersMadeInformativeByInferredAbsences & charactersMadeInformativeByInferredPresences).size)
+  println("Number of informative characters with only inferred data: " + (charactersMadeInformativeByInferredAbsences & charactersMadeInformativeByInferredPresences).size)
 
 }
