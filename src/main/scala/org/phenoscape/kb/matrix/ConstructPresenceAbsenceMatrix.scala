@@ -69,7 +69,7 @@ object ConstructPresenceAbsenceMatrix extends App {
   val sail = new BigdataSail(bigdataProperties)
   val repository = new BigdataSailRepository(sail)
   repository.initialize()
-  val connection = repository.getConnection
+  val connection = repository.getReadOnlyConnection
   connection.setAutoCommit(false)
   val manager = OWLManager.createOWLOntologyManager()
   val tbox = manager.loadOntologyFromOntologyDocument(new File(tboxFile))
