@@ -20,6 +20,17 @@ object CountPopulatedCells extends App {
   val assertedAssociations = associations filter { case (association, supports) => supports exists (_.isDirect) }
   println("Number of asserted cells: " + assertedAssociations.keys.size)
   val groupedByCharacter = associations groupBy { case (association, supports) => association.getCharacterID }
+
+  val assertedGroupedByCharacter = assertedAssociations groupBy { case (association, supports) => association.getCharacterID }
+  val charactersWithBothPresenceAndAbsenceAsserted = assertedGroupedByCharacter.filter {
+    case (characterID, associations) => (associations.keys exists (_.getStateID.endsWith("1"))) && (associations.keys exists (_.getStateID.endsWith("0")))
+  }
+  println("Number of characters with both presence and absence asserted: " + charactersWithBothPresenceAndAbsenceAsserted.keys.size)
+  val cellsForInformativelyAssertedCharacters = charactersWithBothPresenceAndAbsenceAsserted.flatMap{case (characterID, associations) => associations.keys}.toSet
+  println("Number of cells populated in informatively asserted characters: " + cellsForInformativelyAssertedCharacters.size)
+  val taxaForInformativelyAssertedCharacters = cellsForInformativelyAssertedCharacters.map(_.getTaxonID).toSet
+  println("Number of taxa for informatively asserted characters: " + taxaForInformativelyAssertedCharacters.size)
+
   val charactersWithoutAssertedCells = groupedByCharacter filterNot {
     case (characterID, associations) => (associations.values.flatten exists (_.isDirect))
   }
@@ -48,6 +59,5 @@ object CountPopulatedCells extends App {
   val charactersMadeInformativeByInferredPresences = charactersWithAssertedAbsences.keys.toSet & charactersWithoutAssertedPresences.keys.toSet
   println("Number of characters made informative by inferred absences: " + charactersMadeInformativeByInferredAbsences.size)
   println("Number of characters made informative by inferred presences: " + charactersMadeInformativeByInferredPresences.size)
-  println("Number of informative characters with only inferred data: " + (charactersMadeInformativeByInferredAbsences & charactersMadeInformativeByInferredPresences).size)
 
 }
