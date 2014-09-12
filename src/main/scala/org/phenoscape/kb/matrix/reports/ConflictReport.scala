@@ -34,7 +34,14 @@ object ConflictReport extends App {
           val absentSources = associations(absentAssociation).filter(_.isDirect).map(_.getDescriptionSource)
           val presentSources = associations(presentAssociation).filter(_.isDirect).map(_.getDescriptionSource)
           if ((absentSources & presentSources).isEmpty) {
-            println(s"${taxon.getPublicationName}\t${character.getLabel}")
+            print(s"${taxon.getPublicationName}\t${character.getLabel}")
+            (absentSources.isEmpty, presentSources.isEmpty) match {
+              case (false, false) => print("\tasserted/asserted")
+              case (true, false) => print("\tasserted/inferred")
+              case (false, true) => print("\tasserted/inferred")
+              case (true, true) => print("\tinferred/inferred")
+            }
+            println
           }
         }
       }
