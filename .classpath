@@ -1,27 +1,176 @@
-<?xml version="1.0" encoding="UTF-8"?>
 <classpath>
-	<classpathentry kind="src" output="target/classes" path="src/main/java">
-		<attributes>
-			<attribute name="optional" value="true"/>
-			<attribute name="maven.pomderived" value="true"/>
-		</attributes>
-	</classpathentry>
-	<classpathentry kind="src" output="target/test-classes" path="src/test/java">
-		<attributes>
-			<attribute name="optional" value="true"/>
-			<attribute name="maven.pomderived" value="true"/>
-		</attributes>
-	</classpathentry>
-	<classpathentry kind="src" path="src/main/scala"/>
-	<classpathentry kind="con" path="org.eclipse.jdt.launching.JRE_CONTAINER/org.eclipse.jdt.internal.debug.ui.launcher.StandardVMType/JavaSE-1.7">
-		<attributes>
-			<attribute name="maven.pomderived" value="true"/>
-		</attributes>
-	</classpathentry>
-	<classpathentry kind="con" path="org.eclipse.m2e.MAVEN2_CLASSPATH_CONTAINER">
-		<attributes>
-			<attribute name="maven.pomderived" value="true"/>
-		</attributes>
-	</classpathentry>
-	<classpathentry kind="output" path="target/classes"/>
+  <classpathentry output="target/scala-2.10/classes" kind="src" path="src/main/scala"/>
+  <classpathentry output="target/scala-2.10/classes" kind="src" path="src/main/java"/>
+  <classpathentry output="target/scala-2.10/test-classes" kind="src" path="src/test/scala"/>
+  <classpathentry output="target/scala-2.10/test-classes" kind="src" path="src/test/java"/>
+  <classpathentry kind="con" path="org.scala-ide.sdt.launching.SCALA_CONTAINER"/>
+  <classpathentry kind="lib" path="/Users/jim/.ivy2/cache/org.apache.commons/commons-lang3/jars/commons-lang3-3.1.jar"/>
+  <classpathentry kind="lib" path="/Users/jim/.ivy2/cache/commons-io/commons-io/jars/commons-io-2.4.jar"/>
+  <classpathentry kind="lib" path="/Users/jim/.ivy2/cache/net.sourceforge.owlapi/owlapi-distribution/bundles/owlapi-distribution-3.5.0.jar"/>
+  <classpathentry kind="lib" path="/Users/jim/.ivy2/cache/net.sourceforge.owlapi/owlapi-apibinding/bundles/owlapi-apibinding-3.5.0.jar"/>
+  <classpathentry kind="lib" path="/Users/jim/.ivy2/cache/net.sourceforge.owlapi/owlapi-api/bundles/owlapi-api-3.5.0.jar"/>
+  <classpathentry kind="lib" path="/Users/jim/.ivy2/cache/net.sourceforge.owlapi/owlapi-impl/bundles/owlapi-impl-3.5.0.jar"/>
+  <classpathentry kind="lib" path="/Users/jim/.ivy2/cache/net.sourceforge.owlapi/owlapi-parsers/bundles/owlapi-parsers-3.5.0.jar"/>
+  <classpathentry kind="lib" path="/Users/jim/.ivy2/cache/net.sourceforge.owlapi/owlapi-oboformat/bundles/owlapi-oboformat-3.5.0.jar"/>
+  <classpathentry kind="lib" path="/Users/jim/.ivy2/cache/net.sourceforge.owlapi/owlapi-tools/bundles/owlapi-tools-3.5.0.jar"/>
+  <classpathentry kind="lib" path="/Users/jim/.ivy2/cache/org.apache.felix/org.osgi.core/bundles/org.osgi.core-1.4.0.jar"/>
+  <classpathentry kind="lib" path="/Users/jim/.ivy2/cache/net.sourceforge.owlapi/owlapi-contract/jars/owlapi-contract-3.5.0.jar"/>
+  <classpathentry kind="lib" path="/Users/jim/.ivy2/cache/org.semanticweb.elk/elk-owlapi/jars/elk-owlapi-0.4.1.jar"/>
+  <classpathentry kind="lib" path="/Users/jim/.ivy2/cache/org.semanticweb.elk/elk-owl-model/jars/elk-owl-model-0.4.1.jar"/>
+  <classpathentry kind="lib" path="/Users/jim/.ivy2/cache/org.semanticweb.elk/elk-owl-implementation/jars/elk-owl-implementation-0.4.1.jar"/>
+  <classpathentry kind="lib" path="/Users/jim/.ivy2/cache/org.semanticweb.elk/elk-util-hashing/jars/elk-util-hashing-0.4.1.jar"/>
+  <classpathentry kind="lib" path="/Users/jim/.ivy2/cache/org.semanticweb.elk/elk-reasoner/jars/elk-reasoner-0.4.1.jar"/>
+  <classpathentry kind="lib" path="/Users/jim/.ivy2/cache/org.semanticweb.elk/elk-util-collections/jars/elk-util-collections-0.4.1.jar"/>
+  <classpathentry kind="lib" path="/Users/jim/.ivy2/cache/org.semanticweb.elk/elk-util-concurrent/jars/elk-util-concurrent-0.4.1.jar"/>
+  <classpathentry kind="lib" path="/Users/jim/.ivy2/cache/org.semanticweb.elk/elk-util-logging/jars/elk-util-logging-0.4.1.jar"/>
+  <classpathentry kind="lib" path="/Users/jim/.ivy2/cache/org.semanticweb.elk/elk-util-common/jars/elk-util-common-0.4.1.jar"/>
+  <classpathentry kind="lib" path="/Users/jim/.ivy2/cache/org.semanticweb.elk/elk-util-io/jars/elk-util-io-0.4.1.jar"/>
+  <classpathentry kind="lib" path="/Users/jim/.ivy2/cache/com.bigdata/bigdata/jars/bigdata-1.3.2.jar"/>
+  <classpathentry kind="lib" path="/Users/jim/.ivy2/cache/com.github.stephenc.high-scale-lib/high-scale-lib/jars/high-scale-lib-1.1.2.jar"/>
+  <classpathentry kind="lib" path="/Users/jim/.ivy2/cache/org.semanticweb.yars/nxparser/jars/nxparser-1.2.3.jar"/>
+  <classpathentry kind="lib" path="/Users/jim/.ivy2/cache/commons-cli/commons-cli/jars/commons-cli-1.1.jar"/>
+  <classpathentry kind="lib" path="/Users/jim/.ivy2/cache/org.htmlparser/htmlparser/jars/htmlparser-2.1.jar"/>
+  <classpathentry kind="lib" path="/Users/jim/.ivy2/cache/org.htmlparser/htmllexer/jars/htmllexer-2.1.jar"/>
+  <classpathentry kind="lib" path="/Users/jim/.ivy2/cache/colt/colt/jars/colt-1.2.0.jar"/>
+  <classpathentry kind="lib" path="/Users/jim/.ivy2/cache/concurrent/concurrent/jars/concurrent-1.3.4.jar"/>
+  <classpathentry kind="lib" path="/Users/jim/.ivy2/cache/org.apache.lucene/lucene-core/jars/lucene-core-3.0.0.jar"/>
+  <classpathentry kind="lib" path="/Users/jim/.ivy2/cache/org.apache.lucene/lucene-analyzers/jars/lucene-analyzers-3.0.0.jar"/>
+  <classpathentry kind="lib" path="/Users/jim/.ivy2/cache/com.ibm.icu/icu4j/jars/icu4j-4.8.jar"/>
+  <classpathentry kind="lib" path="/Users/jim/.ivy2/cache/log4j/log4j/bundles/log4j-1.2.17.jar"/>
+  <classpathentry kind="lib" path="/Users/jim/.ivy2/cache/org.apache.httpcomponents/httpclient-cache/jars/httpclient-cache-4.1.3.jar"/>
+  <classpathentry kind="lib" path="/Users/jim/.ivy2/cache/org.apache.httpcomponents/httpmime/jars/httpmime-4.1.3.jar"/>
+  <classpathentry kind="lib" path="/Users/jim/.ivy2/cache/commons-fileupload/commons-fileupload/jars/commons-fileupload-1.3.1.jar"/>
+  <classpathentry kind="lib" path="/Users/jim/.ivy2/cache/com.fasterxml.jackson.core/jackson-core/jars/jackson-core-2.2.3.jar"/>
+  <classpathentry kind="lib" path="/Users/jim/.ivy2/cache/com.tinkerpop.blueprints/blueprints-core/jars/blueprints-core-2.5.0.jar"/>
+  <classpathentry kind="lib" path="/Users/jim/.ivy2/cache/org.codehaus.jettison/jettison/bundles/jettison-1.3.3.jar"/>
+  <classpathentry kind="lib" path="/Users/jim/.ivy2/cache/stax/stax-api/jars/stax-api-1.0.1.jar"/>
+  <classpathentry kind="lib" path="/Users/jim/.ivy2/cache/com.fasterxml.jackson.datatype/jackson-datatype-json-org/jars/jackson-datatype-json-org-2.2.3.jar"/>
+  <classpathentry kind="lib" path="/Users/jim/.ivy2/cache/com.fasterxml.jackson.core/jackson-databind/jars/jackson-databind-2.2.2.jar"/>
+  <classpathentry kind="lib" path="/Users/jim/.ivy2/cache/com.fasterxml.jackson.core/jackson-annotations/jars/jackson-annotations-2.2.2.jar"/>
+  <classpathentry kind="lib" path="/Users/jim/.ivy2/cache/org.json/json/jars/json-20090211.jar"/>
+  <classpathentry kind="lib" path="/Users/jim/.ivy2/cache/commons-configuration/commons-configuration/jars/commons-configuration-1.6.jar"/>
+  <classpathentry kind="lib" path="/Users/jim/.ivy2/cache/commons-collections/commons-collections/jars/commons-collections-3.2.1.jar"/>
+  <classpathentry kind="lib" path="/Users/jim/.ivy2/cache/commons-lang/commons-lang/jars/commons-lang-2.4.jar"/>
+  <classpathentry kind="lib" path="/Users/jim/.ivy2/cache/commons-digester/commons-digester/jars/commons-digester-1.8.jar"/>
+  <classpathentry kind="lib" path="/Users/jim/.ivy2/cache/commons-beanutils/commons-beanutils/jars/commons-beanutils-1.7.0.jar"/>
+  <classpathentry kind="lib" path="/Users/jim/.ivy2/cache/commons-beanutils/commons-beanutils-core/jars/commons-beanutils-core-1.8.0.jar"/>
+  <classpathentry kind="lib" path="/Users/jim/.ivy2/cache/com.tinkerpop.rexster/rexster-core/jars/rexster-core-2.5.0.jar"/>
+  <classpathentry kind="lib" path="/Users/jim/.ivy2/cache/com.sun.jersey/jersey-json/jars/jersey-json-1.17.jar"/>
+  <classpathentry kind="lib" path="/Users/jim/.ivy2/cache/com.sun.xml.bind/jaxb-impl/jars/jaxb-impl-2.2.3-1.jar"/>
+  <classpathentry kind="lib" path="/Users/jim/.ivy2/cache/javax.xml.bind/jaxb-api/jars/jaxb-api-2.2.2.jar"/>
+  <classpathentry kind="lib" path="/Users/jim/.ivy2/cache/javax.xml.stream/stax-api/jars/stax-api-1.0-2.jar"/>
+  <classpathentry kind="lib" path="/Users/jim/.ivy2/cache/javax.activation/activation/jars/activation-1.1.jar"/>
+  <classpathentry kind="lib" path="/Users/jim/.ivy2/cache/org.codehaus.jackson/jackson-core-asl/jars/jackson-core-asl-1.9.2.jar"/>
+  <classpathentry kind="lib" path="/Users/jim/.ivy2/cache/org.codehaus.jackson/jackson-mapper-asl/jars/jackson-mapper-asl-1.9.2.jar"/>
+  <classpathentry kind="lib" path="/Users/jim/.ivy2/cache/org.codehaus.jackson/jackson-jaxrs/jars/jackson-jaxrs-1.9.2.jar"/>
+  <classpathentry kind="lib" path="/Users/jim/.ivy2/cache/org.codehaus.jackson/jackson-xc/jars/jackson-xc-1.9.2.jar"/>
+  <classpathentry kind="lib" path="/Users/jim/.ivy2/cache/javax.servlet/javax.servlet-api/jars/javax.servlet-api-3.0.1.jar"/>
+  <classpathentry kind="lib" path="/Users/jim/.ivy2/cache/com.codahale.metrics/metrics-core/bundles/metrics-core-3.0.0.jar"/>
+  <classpathentry kind="lib" path="/Users/jim/.ivy2/cache/it.unimi/fastutil/jars/fastutil-5.1.5.jar"/>
+  <classpathentry kind="lib" path="/Users/jim/.ivy2/cache/com.ibm.icu/icu4j-charset/jars/icu4j-charset-4.8.jar"/>
+  <classpathentry kind="lib" path="/Users/jim/.ivy2/cache/org.openrdf.sesame/sesame-runtime/jars/sesame-runtime-2.6.10.jar"/>
+  <classpathentry kind="lib" path="/Users/jim/.ivy2/cache/org.openrdf.sesame/sesame-model/jars/sesame-model-2.6.10.jar"/>
+  <classpathentry kind="lib" path="/Users/jim/.ivy2/cache/org.openrdf.sesame/sesame-util/jars/sesame-util-2.6.10.jar"/>
+  <classpathentry kind="lib" path="/Users/jim/.ivy2/cache/org.openrdf.sesame/sesame-query/jars/sesame-query-2.6.10.jar"/>
+  <classpathentry kind="lib" path="/Users/jim/.ivy2/cache/org.openrdf.sesame/sesame-rio-api/jars/sesame-rio-api-2.6.10.jar"/>
+  <classpathentry kind="lib" path="/Users/jim/.ivy2/cache/org.openrdf.sesame/sesame-queryalgebra-model/jars/sesame-queryalgebra-model-2.6.10.jar"/>
+  <classpathentry kind="lib" path="/Users/jim/.ivy2/cache/org.openrdf.sesame/sesame-queryparser-api/jars/sesame-queryparser-api-2.6.10.jar"/>
+  <classpathentry kind="lib" path="/Users/jim/.ivy2/cache/org.openrdf.sesame/sesame-queryresultio-api/jars/sesame-queryresultio-api-2.6.10.jar"/>
+  <classpathentry kind="lib" path="/Users/jim/.ivy2/cache/org.openrdf.sesame/sesame-repository-api/jars/sesame-repository-api-2.6.10.jar"/>
+  <classpathentry kind="lib" path="/Users/jim/.ivy2/cache/org.openrdf.sesame/sesame-repository-manager/jars/sesame-repository-manager-2.6.10.jar"/>
+  <classpathentry kind="lib" path="/Users/jim/.ivy2/cache/org.openrdf.sesame/sesame-repository-event/jars/sesame-repository-event-2.6.10.jar"/>
+  <classpathentry kind="lib" path="/Users/jim/.ivy2/cache/org.openrdf.sesame/sesame-repository-sail/jars/sesame-repository-sail-2.6.10.jar"/>
+  <classpathentry kind="lib" path="/Users/jim/.ivy2/cache/org.openrdf.sesame/sesame-sail-api/jars/sesame-sail-api-2.6.10.jar"/>
+  <classpathentry kind="lib" path="/Users/jim/.ivy2/cache/org.openrdf.sesame/sesame-sail-memory/jars/sesame-sail-memory-2.6.10.jar"/>
+  <classpathentry kind="lib" path="/Users/jim/.ivy2/cache/org.openrdf.sesame/sesame-sail-inferencer/jars/sesame-sail-inferencer-2.6.10.jar"/>
+  <classpathentry kind="lib" path="/Users/jim/.ivy2/cache/org.openrdf.sesame/sesame-queryalgebra-evaluation/jars/sesame-queryalgebra-evaluation-2.6.10.jar"/>
+  <classpathentry kind="lib" path="/Users/jim/.ivy2/cache/org.openrdf.sesame/sesame-repository-sparql/jars/sesame-repository-sparql-2.6.10.jar"/>
+  <classpathentry kind="lib" path="/Users/jim/.ivy2/cache/org.openrdf.sesame/sesame-http-client/jars/sesame-http-client-2.6.10.jar"/>
+  <classpathentry kind="lib" path="/Users/jim/.ivy2/cache/org.openrdf.sesame/sesame-http-protocol/jars/sesame-http-protocol-2.6.10.jar"/>
+  <classpathentry kind="lib" path="/Users/jim/.ivy2/cache/org.openrdf.sesame/sesame-rio-ntriples/jars/sesame-rio-ntriples-2.6.10.jar"/>
+  <classpathentry kind="lib" path="/Users/jim/.ivy2/cache/commons-httpclient/commons-httpclient/jars/commons-httpclient-3.1.jar"/>
+  <classpathentry kind="lib" path="/Users/jim/.ivy2/cache/org.openrdf.sesame/sesame-queryresultio-sparqlxml/jars/sesame-queryresultio-sparqlxml-2.6.10.jar"/>
+  <classpathentry kind="lib" path="/Users/jim/.ivy2/cache/org.openrdf.sesame/sesame-repository-http/jars/sesame-repository-http-2.6.10.jar"/>
+  <classpathentry kind="lib" path="/Users/jim/.ivy2/cache/org.openrdf.sesame/sesame-repository-contextaware/jars/sesame-repository-contextaware-2.6.10.jar"/>
+  <classpathentry kind="lib" path="/Users/jim/.ivy2/cache/com.bigdata/dsi-utils/jars/dsi-utils-1.0.6-020610.jar"/>
+  <classpathentry kind="lib" path="/Users/jim/.ivy2/cache/com.bigdata/lgpl-utils/jars/lgpl-utils-1.0.7-270114.jar"/>
+  <classpathentry kind="lib" path="/Users/jim/.ivy2/cache/org.openrdf.sesame/sesame-queryparser-serql/jars/sesame-queryparser-serql-2.6.10.jar"/>
+  <classpathentry kind="lib" path="/Users/jim/.ivy2/cache/org.openrdf.sesame/sesame-queryparser-sparql/jars/sesame-queryparser-sparql-2.6.10.jar"/>
+  <classpathentry kind="lib" path="/Users/jim/.ivy2/cache/org.openrdf.sesame/sesame-queryresultio-binary/jars/sesame-queryresultio-binary-2.6.10.jar"/>
+  <classpathentry kind="lib" path="/Users/jim/.ivy2/cache/org.openrdf.sesame/sesame-queryresultio-sparqljson/jars/sesame-queryresultio-sparqljson-2.6.10.jar"/>
+  <classpathentry kind="lib" path="/Users/jim/.ivy2/cache/org.openrdf.sesame/sesame-queryresultio-text/jars/sesame-queryresultio-text-2.6.10.jar"/>
+  <classpathentry kind="lib" path="/Users/jim/.ivy2/cache/net.sf.opencsv/opencsv/jars/opencsv-2.0.jar"/>
+  <classpathentry kind="lib" path="/Users/jim/.ivy2/cache/org.openrdf.sesame/sesame-repository-dataset/jars/sesame-repository-dataset-2.6.10.jar"/>
+  <classpathentry kind="lib" path="/Users/jim/.ivy2/cache/org.openrdf.sesame/sesame-rio-binary/jars/sesame-rio-binary-2.6.10.jar"/>
+  <classpathentry kind="lib" path="/Users/jim/.ivy2/cache/org.openrdf.sesame/sesame-rio-n3/jars/sesame-rio-n3-2.6.10.jar"/>
+  <classpathentry kind="lib" path="/Users/jim/.ivy2/cache/org.openrdf.sesame/sesame-rio-turtle/jars/sesame-rio-turtle-2.6.10.jar"/>
+  <classpathentry kind="lib" path="/Users/jim/.ivy2/cache/org.openrdf.sesame/sesame-rio-rdfxml/jars/sesame-rio-rdfxml-2.6.10.jar"/>
+  <classpathentry kind="lib" path="/Users/jim/.ivy2/cache/org.openrdf.sesame/sesame-rio-trix/jars/sesame-rio-trix-2.6.10.jar"/>
+  <classpathentry kind="lib" path="/Users/jim/.ivy2/cache/org.openrdf.sesame/sesame-rio-trig/jars/sesame-rio-trig-2.6.10.jar"/>
+  <classpathentry kind="lib" path="/Users/jim/.ivy2/cache/org.openrdf.sesame/sesame-sail-nativerdf/jars/sesame-sail-nativerdf-2.6.10.jar"/>
+  <classpathentry kind="lib" path="/Users/jim/.ivy2/cache/org.openrdf.sesame/sesame-sail-rdbms/jars/sesame-sail-rdbms-2.6.10.jar"/>
+  <classpathentry kind="lib" path="/Users/jim/.ivy2/cache/commons-dbcp/commons-dbcp/jars/commons-dbcp-1.3.jar"/>
+  <classpathentry kind="lib" path="/Users/jim/.ivy2/cache/commons-pool/commons-pool/jars/commons-pool-1.5.4.jar"/>
+  <classpathentry kind="lib" path="/Users/jim/.ivy2/cache/org.phenoscape/scowl/jars/scowl-0.8.jar"/>
+  <classpathentry kind="lib" path="/Users/jim/.ivy2/cache/org.phenoscape/kb-owl-tools/jars/kb-owl-tools-1.0.1.jar"/>
+  <classpathentry kind="lib" path="/Users/jim/.ivy2/cache/org.jdom/jdom/jars/jdom-2.0.2.jar"/>
+  <classpathentry kind="lib" path="/Users/jim/.ivy2/cache/org.apache.ant/ant/jars/ant-1.8.2.jar"/>
+  <classpathentry kind="lib" path="/Users/jim/.ivy2/cache/org.apache.ant/ant-launcher/jars/ant-launcher-1.8.2.jar"/>
+  <classpathentry kind="lib" path="/Users/jim/.ivy2/cache/eu.trowl/trowlcore/jars/trowlcore-1.0.jar"/>
+  <classpathentry kind="lib" path="/Users/jim/.ivy2/cache/org.scala-lang.modules/scala-async_2.10/bundles/scala-async_2.10-0.9.0-M4.jar"/>
+  <classpathentry kind="lib" path="/Users/jim/.ivy2/cache/org.phenoscape/owlet/jars/owlet-1.1.6.jar"/>
+  <classpathentry kind="lib" path="/Users/jim/.ivy2/cache/org.scalaz/scalaz-core_2.10/bundles/scalaz-core_2.10-7.1.0.jar"/>
+  <classpathentry kind="lib" path="/Users/jim/.ivy2/cache/org.apache.jena/jena-tdb/jars/jena-tdb-0.10.1.jar"/>
+  <classpathentry kind="lib" path="/Users/jim/.ivy2/cache/org.apache.jena/jena-arq/jars/jena-arq-2.10.1.jar"/>
+  <classpathentry kind="lib" path="/Users/jim/.ivy2/cache/org.apache.jena/jena-core/jars/jena-core-2.10.1.jar"/>
+  <classpathentry kind="lib" path="/Users/jim/.ivy2/cache/org.apache.jena/jena-iri/jars/jena-iri-0.9.6.jar"/>
+  <classpathentry kind="lib" path="/Users/jim/.ivy2/cache/org.slf4j/slf4j-api/jars/slf4j-api-1.6.4.jar"/>
+  <classpathentry kind="lib" path="/Users/jim/.ivy2/cache/org.slf4j/slf4j-log4j12/jars/slf4j-log4j12-1.6.4.jar"/>
+  <classpathentry kind="lib" path="/Users/jim/.ivy2/cache/xerces/xercesImpl/jars/xercesImpl-2.11.0.jar"/>
+  <classpathentry kind="lib" path="/Users/jim/.ivy2/cache/xml-apis/xml-apis/jars/xml-apis-1.4.01.jar"/>
+  <classpathentry kind="lib" path="/Users/jim/.ivy2/cache/org.apache.httpcomponents/httpclient/jars/httpclient-4.2.3.jar"/>
+  <classpathentry kind="lib" path="/Users/jim/.ivy2/cache/org.apache.httpcomponents/httpcore/jars/httpcore-4.2.2.jar"/>
+  <classpathentry kind="lib" path="/Users/jim/.ivy2/cache/commons-codec/commons-codec/jars/commons-codec-1.6.jar"/>
+  <classpathentry kind="lib" path="/Users/jim/.ivy2/cache/org.slf4j/jcl-over-slf4j/jars/jcl-over-slf4j-1.6.4.jar"/>
+  <classpathentry kind="lib" path="/Users/jim/.ivy2/cache/org.phenoscape/phenex/jars/phenex-1.15.4.jar"/>
+  <classpathentry kind="lib" path="/Users/jim/.ivy2/cache/org.obo/bbop/jars/bbop-2.3.jar"/>
+  <classpathentry kind="lib" path="/Users/jim/.ivy2/cache/com.sun.woodstock.dependlibs/jhall/jars/jhall-2.0.jar"/>
+  <classpathentry kind="lib" path="/Users/jim/.ivy2/cache/org.simplericity.macify/macify/jars/macify-1.6.jar"/>
+  <classpathentry kind="lib" path="/Users/jim/.ivy2/cache/net.infonode/idw-gpl/jars/idw-gpl-1.6.1.jar"/>
+  <classpathentry kind="lib" path="/Users/jim/.ivy2/cache/org.obo/obo/jars/obo-2.3.jar"/>
+  <classpathentry kind="lib" path="/Users/jim/.ivy2/cache/org.bbop/oboformat/jars/oboformat-0.5.5.jar"/>
+  <classpathentry kind="lib" path="/Users/jim/.ivy2/cache/commons-logging/commons-logging/jars/commons-logging-1.1.3.jar"/>
+  <classpathentry kind="lib" path="/Users/jim/.ivy2/cache/org.hsqldb/hsqldb/jars/hsqldb-2.3.1.jar"/>
+  <classpathentry kind="lib" path="/Users/jim/.ivy2/cache/relaxngDatatype/relaxngDatatype/jars/relaxngDatatype-2.2.jar"/>
+  <classpathentry kind="lib" path="/Users/jim/.ivy2/cache/xsdlib/xsdlib/jars/xsdlib-2.2.jar"/>
+  <classpathentry kind="lib" path="/Users/jim/.ivy2/cache/xalan/serializer/jars/serializer-2.7.1.jar"/>
+  <classpathentry kind="lib" path="/Users/jim/.ivy2/cache/jpl/jpl/jars/jpl-3.1.4-alpha.jar"/>
+  <classpathentry kind="lib" path="/Users/jim/.ivy2/cache/org.postgresql/postgresql/jars/postgresql-9.3-1100-jdbc41.jar"/>
+  <classpathentry kind="lib" path="/Users/jim/.ivy2/cache/org.obo/oboedit/jars/oboedit-2.3.jar"/>
+  <classpathentry kind="lib" path="/Users/jim/.ivy2/cache/org.swinglabs/swing-layout/jars/swing-layout-1.0.3.jar"/>
+  <classpathentry kind="lib" path="/Users/jim/.ivy2/cache/org.apache.ws.commons.axiom/axiom-api/jars/axiom-api-1.2.14.jar"/>
+  <classpathentry kind="lib" path="/Users/jim/.ivy2/cache/org.apache.geronimo.specs/geronimo-activation_1.1_spec/bundles/geronimo-activation_1.1_spec-1.1.jar"/>
+  <classpathentry kind="lib" path="/Users/jim/.ivy2/cache/org.apache.geronimo.specs/geronimo-javamail_1.4_spec/bundles/geronimo-javamail_1.4_spec-1.7.1.jar"/>
+  <classpathentry kind="lib" path="/Users/jim/.ivy2/cache/jaxen/jaxen/jars/jaxen-1.1.4.jar"/>
+  <classpathentry kind="lib" path="/Users/jim/.ivy2/cache/org.apache.geronimo.specs/geronimo-stax-api_1.0_spec/bundles/geronimo-stax-api_1.0_spec-1.0.1.jar"/>
+  <classpathentry kind="lib" path="/Users/jim/.ivy2/cache/org.apache.james/apache-mime4j-core/jars/apache-mime4j-core-0.7.2.jar"/>
+  <classpathentry kind="lib" path="/Users/jim/.ivy2/cache/org.apache.ws.commons.axiom/axiom-impl/bundles/axiom-impl-1.2.14.jar"/>
+  <classpathentry kind="lib" path="/Users/jim/.ivy2/cache/org.codehaus.woodstox/woodstox-core-asl/jars/woodstox-core-asl-4.1.4.jar"/>
+  <classpathentry kind="lib" path="/Users/jim/.ivy2/cache/org.codehaus.woodstox/stax2-api/jars/stax2-api-3.1.1.jar"/>
+  <classpathentry kind="lib" path="/Users/jim/.ivy2/cache/org.nexml/nexmlbeans-dict/jars/nexmlbeans-dict-1.0.jar"/>
+  <classpathentry kind="lib" path="/Users/jim/.ivy2/cache/org.apache.xmlbeans/xmlbeans/jars/xmlbeans-2.4.0.jar"/>
+  <classpathentry kind="lib" path="/Users/jim/.ivy2/cache/org.nexml/nexmlbeans-2009/jars/nexmlbeans-2009-1.0.jar"/>
+  <classpathentry kind="lib" path="/Users/jim/.ivy2/cache/org.obo/phenoxmlbeans/jars/phenoxmlbeans-1.0.jar"/>
+  <classpathentry kind="lib" path="/Users/jim/.ivy2/cache/net.java.dev.glazedlists/glazedlists_java15/jars/glazedlists_java15-1.7.0.jar"/>
+  <classpathentry kind="lib" path="/Users/jim/.ivy2/cache/edu.stanford.ejalbert/BrowserLauncher2/jars/BrowserLauncher2-1.3.jar"/>
+  <classpathentry kind="lib" path="/Users/jim/.ivy2/cache/net.sf.jpathwatch/jpathwatch/jars/jpathwatch-0.95.jar"/>
+  <classpathentry kind="lib" path="/Users/jim/.ivy2/cache/org.jdesktop/swing-worker/jars/swing-worker-1.1.jar"/>
+  <classpathentry kind="lib" path="/Users/jim/.ivy2/cache/org.apache.commons/commons-csv/jars/commons-csv-1.0-SNAPSHOT.jar"/>
+  <classpathentry kind="lib" path="/Users/jim/.ivy2/cache/org.apache.commons/commons-collections4/jars/commons-collections4-4.0.jar"/>
+  <classpathentry kind="lib" path="/Users/jim/.ivy2/cache/org.swinglabs.swingx/swingx-all/jars/swingx-all-1.6.5-1.jar"/>
+  <classpathentry kind="lib" path="/Users/jim/.ivy2/cache/org.jdesktop/beansbinding/jars/beansbinding-1.2.1.jar"/>
+  <classpathentry kind="lib" path="/Users/jim/.ivy2/cache/junit/junit/jars/junit-4.10.jar"/>
+  <classpathentry kind="lib" path="/Users/jim/.ivy2/cache/org.hamcrest/hamcrest-core/jars/hamcrest-core-1.1.jar"/>
+  <classpathentry kind="con" path="org.eclipse.jdt.launching.JRE_CONTAINER"/>
+  <classpathentry kind="output" path="bin"/>
 </classpath>
