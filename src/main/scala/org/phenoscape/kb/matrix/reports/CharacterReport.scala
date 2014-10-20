@@ -6,20 +6,20 @@ import scala.collection.JavaConversions._
 
 import org.obo.datamodel.impl.OBOSessionImpl
 import org.phenoscape.io.NeXMLReader
+import org.phenoscape.model.AssociationSupport
+import org.phenoscape.model.DataSet
 
-object CharacterReport extends App {
+object CharacterReport {
 
-  val filePath = args(0)
-  val termID = args(1)
-  val dataset = new NeXMLReader(new File(filePath), new OBOSessionImpl()).getDataSet
-  def findTaxonLabel(id: String) = dataset.getTaxa.find(_.getNexmlID == id).map(_.getPublicationName)
-  val associations = dataset.getAssociationSupport
-  val taxonToSupports = associations.filter { case (assoc, supports) => assoc.getCharacterID == termID }
-    .map { case (key, value) => (key.getTaxonID, value.partition(_.isDirect)) }
-  println("taxon\tdirects\tindirects")
-  for ((taxon, (directs, indirects)) <- taxonToSupports) {
-    val taxonName = findTaxonLabel(taxon).getOrElse(taxon)
-    println(s"$taxonName\t${directs.size}\t${indirects.size}")
+  def report(filePath: String, termID: String): String = {
+    val dataset = new NeXMLReader(new File(filePath), new OBOSessionImpl()).getDataSet
+    val taxonToSupports = Report.directAndIndirectSupportsForCharacterValuesByTaxon(dataset, termID)
+    println("taxon\tdirects\tindirects")
+    val lines = for ((taxon, (directs, indirects)) <- taxonToSupports) yield {
+      val taxonName = Report.findTaxonLabel(taxon, dataset).getOrElse(taxon)
+      (s"$taxonName\t${directs.size}\t${indirects.size}")
+    }
+    lines.mkString("\n")
   }
 
 }

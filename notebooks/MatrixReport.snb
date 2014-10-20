@@ -1,0 +1,186 @@
+{
+  "metadata":{
+    "name":"MatrixReport",
+    "user_save_timestamp":"2014-10-02T19:39:07.724Z",
+    "auto_save_timestamp":"2014-10-17T18:04:54.309Z"
+  },
+  "worksheets":[{
+    "cells":[{
+      "cell_type":"code",
+      "input":"<link rel=\"stylesheet\" href=\"https://maxcdn.bootstrapcdn.com/bootstrap/3.2.0/css/bootstrap.min.css\"/>\n<script src=\"http://github.hubspot.com/sortable/js/sortable.js\"/>\n<link rel=\"stylesheet\" href=\"http://github.hubspot.com/sortable/css/sortable-theme-bootstrap.css\" />",
+      "language":"scala",
+      "collapsed":false,
+      "prompt_number":13,
+      "outputs":[]
+    },{
+      "cell_type":"code",
+      "input":"import java.io.File\n\nimport scala.collection.JavaConversions._\n\nimport org.obo.datamodel.impl.OBOSessionImpl\nimport org.phenoscape.io.NeXMLReader\n  \nimport org.phenoscape.kb.matrix.reports.Report._",
+      "language":"scala",
+      "collapsed":false,
+      "prompt_number":2,
+      "outputs":[]
+    },{
+      "cell_type":"code",
+      "input":"val dataFile = new File(\"/Users/jim/Dropbox/EQ matrices/2014-6-26/sarcop-presence-absence-automatic-only-informative.xml\")",
+      "language":"scala",
+      "collapsed":false,
+      "prompt_number":3,
+      "outputs":[]
+    },{
+      "cell_type":"code",
+      "input":"val dataset = new NeXMLReader(dataFile, new OBOSessionImpl()).getDataSet",
+      "language":"scala",
+      "collapsed":false,
+      "prompt_number":4,
+      "outputs":[]
+    },{
+      "cell_type":"heading",
+      "source":"Summary",
+      "level":2
+    },{
+      "cell_type":"code",
+      "input":"val populatedCellCount = countPopulatedCells(dataset)\nval assertedCellCount = countAssertedCells(dataset)\n<table class=\"h4\">\n  <tr><td>Characters: {dataset.getCharacters.size}</td></tr>\n  <tr><td>Taxa: {dataset.getTaxa.size}</td></tr>\n  <tr><td>Total cells: {dataset.getTaxa.size * dataset.getCharacters.size}</td></tr>\n  <tr><td>Populated cells: {populatedCellCount}</td></tr>\n    <tr><td>Asserted cells: {assertedCellCount} ({assertedCellCount.toFloat/populatedCellCount.toFloat} of populated)</td></tr>\n    \n  <tr><td>Taxa with inferred data only: {taxaWithOnlyInferredStates(dataset).size}</td></tr>\n</table>",
+      "language":"scala",
+      "collapsed":false,
+      "prompt_number":21,
+      "outputs":[]
+    },{
+      "cell_type":"heading",
+      "source":"Counts of direct and indirect supporting states for values of character \"digit\", in each taxon:",
+      "level":2
+    },{
+      "cell_type":"code",
+      "input":"val digitID = \"http://purl.obolibrary.org/obo/UBERON_0012150\"\nval taxonToSupports = directAndIndirectSupportsForCharacterValuesByTaxon(dataset, digitID)\n  <table class=\"table table-striped table-condensed sortable-theme-bootstrap\" data-sortable=\"\">\n  \t<thead>\n  \t<tr><th>taxon</th><th>directs</th><th>indirects</th></tr>\n  </thead>\n  <tbody>\n{ for {\n  (taxon, (directs, indirects)) <- taxonToSupports\n} yield {\n  val taxonName = findTaxonLabel(taxon, dataset).getOrElse(taxon)\n  <tr>\n    <td>{taxonName}</td>\n    <td>{directs.size}</td>\n    <td>{indirects.size}</td>\n  </tr>\n}\n}\n  </tbody>\n  </table>",
+      "language":"scala",
+      "collapsed":false,
+      "prompt_number":15,
+      "outputs":[]
+    },{
+      "cell_type":"code",
+      "input":"<script type=\"text/javascript\">Sortable.init()</script>",
+      "language":"scala",
+      "collapsed":false,
+      "prompt_number":16,
+      "outputs":[]
+    },{
+      "cell_type":"code",
+      "input":"",
+      "language":"scala",
+      "collapsed":false,
+      "outputs":[]
+    }]
+  }],
+  "autosaved":[{
+    "cells":[{
+      "cell_type":"code",
+      "input":"<link rel=\"stylesheet\" href=\"https://maxcdn.bootstrapcdn.com/bootstrap/3.2.0/css/bootstrap.min.css\"/>\n<script src=\"http://github.hubspot.com/sortable/js/sortable.js\"/>\n<link rel=\"stylesheet\" href=\"http://github.hubspot.com/sortable/css/sortable-theme-bootstrap.css\" />",
+      "language":"scala",
+      "collapsed":false,
+      "prompt_number":1,
+      "outputs":[]
+    },{
+      "cell_type":"code",
+      "input":"import java.io.File\n\nimport scala.collection.JavaConversions._\n\nimport org.obo.datamodel.impl.OBOSessionImpl\nimport org.phenoscape.io.NeXMLReader\n  \nimport org.phenoscape.kb.matrix.reports.Report._",
+      "language":"scala",
+      "collapsed":false,
+      "prompt_number":2,
+      "outputs":[]
+    },{
+      "cell_type":"code",
+      "input":"val dataFile = new File(\"/Users/jim/Dropbox/EQ matrices/2014-6-26/sarcop-presence-absence-automatic-only-informative.xml\")",
+      "language":"scala",
+      "collapsed":false,
+      "prompt_number":3,
+      "outputs":[]
+    },{
+      "cell_type":"code",
+      "input":"val dataset = new NeXMLReader(dataFile, new OBOSessionImpl()).getDataSet",
+      "language":"scala",
+      "collapsed":false,
+      "prompt_number":4,
+      "outputs":[]
+    },{
+      "cell_type":"heading",
+      "source":"Summary",
+      "level":2
+    },{
+      "cell_type":"code",
+      "input":"val populatedCellCount = countPopulatedCells(dataset)\nval assertedCellCount = countAssertedCells(dataset)\n<table class=\"h4\">\n  <tr><td>Characters: {dataset.getCharacters.size}</td></tr>\n  <tr><td>Taxa: {dataset.getTaxa.size}</td></tr>\n  <tr><td>Total cells: {dataset.getTaxa.size * dataset.getCharacters.size}</td></tr>\n  <tr><td>Populated cells: {populatedCellCount}</td></tr>\n    <tr><td>Asserted cells: {assertedCellCount} ({(assertedCellCount.toFloat/populatedCellCount.toFloat*100).round}% of populated)</td></tr>\n    \n  <tr><td>Taxa with inferred data only: {taxaWithOnlyInferredStates(dataset).size}</td></tr>\n</table>",
+      "language":"scala",
+      "collapsed":false,
+      "prompt_number":5,
+      "outputs":[]
+    },{
+      "cell_type":"code",
+      "input":"def findCharacterLabel(id: String) = dataset.getCharacters.find(_.getNexmlID == id).map(_.getLabel)\n  val associations = dataset.getAssociationSupport\n  val charactersWithPatterns = associations.keys\n    .groupBy(_.getCharacterID)\n    .map {\n      case (characterID, associations) =>\n        (characterID, associations.map(assoc => (assoc.getStateID.last, assoc.getTaxonID)).toSet)\n    }\n  def characterWithPatternToCharacterWithTaxonCount(in: Map[String, Set[(Char, String)]]) = in.map {\n    case (characterID, pattern) =>\n      (characterID, pattern.groupBy {\n        case (state, taxon) =>\n          taxon\n      }.keys.toSet.size)\n  }\n  val patternsWithCharacters = charactersWithPatterns.groupBy { case (character, pattern) => pattern }.map { case (pattern, characterToPattern) => (pattern, characterWithPatternToCharacterWithTaxonCount(characterToPattern)) }\n  val clusters = patternsWithCharacters.values.filter(_.size > 1).toSeq.sortWith((x, y) => x.size > y.size)\n   clusters.map(item => item. \n    \"\"",
+      "language":"scala",
+      "collapsed":false,
+      "prompt_number":6,
+      "outputs":[]
+    },{
+      "cell_type":"code",
+      "input":"val inferredOnlyCharacters = charactersWithoutAssertedCells(dataset).keys.toSet\n  val characterGroups = for (characterGroup <- clusters) yield {\n    characterGroup.map {\n      case (characterID, taxonCount) =>\n        val characterLabel = findCharacterLabel(characterID).getOrElse(characterID)\n        val inferredLabel = if (inferredOnlyCharacters(characterID)) \"[inferred]\" else \"\"\n        s\"$characterLabel $inferredLabel\"\n    }.mkString(\", \")\n  }\n\"\"",
+      "language":"scala",
+      "collapsed":false,
+      "prompt_number":7,
+      "outputs":[]
+    },{
+      "cell_type":"code",
+      "input":"val histogram = clusters.groupBy(_.size).map { case (size, clusterGroup) => (size, clusterGroup.length) }.toSeq.sortBy(_._1)\n<div class=\"chart\"> {\n  for {\n    (size, count) <- histogram\n  } yield {\n    <div style={s\"height: 30px; width: ${count*10}px; background-color: SteelBlue; margin: 3px; text-align: right; color: white\"}>\n      {size}\n    </div>\n          }\n} \n</div>",
+      "language":"scala",
+      "collapsed":false,
+      "prompt_number":8,
+      "outputs":[]
+    },{
+      "cell_type":"code",
+      "input":"val totalFilledCellsUnderCharactersInClustersOfSize2OrMore = (for {\n    cluster <- clusters\n  } yield cluster.values.sum).sum",
+      "language":"scala",
+      "collapsed":false,
+      "prompt_number":9,
+      "outputs":[]
+    },{
+      "cell_type":"code",
+      "input":"<table class=\"table table-striped table-condensed sortable-theme-bootstrap\" data-sortable=\"\">\n  <tbody>\n{for {\n  group <- characterGroups\n} yield <tr><td>{group}</td></tr>\n}\n</tbody>\n</table>",
+      "language":"scala",
+      "collapsed":false,
+      "prompt_number":10,
+      "outputs":[]
+    },{
+      "cell_type":"heading",
+      "source":"Taxa present in matrix",
+      "level":2
+    },{
+      "cell_type":"code",
+      "input":"<table class=\"table table-striped table-condensed sortable-theme-bootstrap\" data-sortable=\"\">\n  <thead>\n  \t<tr><th>Taxon</th></tr>\n  </thead>\n  <tbody>\n{\n  for {taxon <- taxaWithOnlyInferredStates(dataset)}\n  yield {\n    <tr><td>\n          \n      {taxon.getPublicationName}\n      </td></tr>\n  }\n}\n  </tbody>\n  </table>",
+      "language":"scala",
+      "collapsed":false,
+      "prompt_number":11,
+      "outputs":[]
+    },{
+      "cell_type":"heading",
+      "source":"Counts of direct and indirect supporting states for values of character \"digit\", in each taxon:",
+      "level":2
+    },{
+      "cell_type":"code",
+      "input":"val digitID = \"http://purl.obolibrary.org/obo/UBERON_0012150\"\nval taxonToSupports = directAndIndirectSupportsForCharacterValuesByTaxon(dataset, digitID)\n  <table class=\"table table-striped table-condensed sortable-theme-bootstrap\" data-sortable=\"\">\n  \t<thead>\n  \t<tr><th>taxon</th><th>directs</th><th>indirects</th></tr>\n  </thead>\n  <tbody>\n{ for {\n  (taxon, (directs, indirects)) <- taxonToSupports\n} yield {\n  val taxonName = findTaxonLabel(taxon, dataset).getOrElse(taxon)\n  <tr>\n    <td>{taxonName}</td>\n    <td>{directs.size}</td>\n    <td>{indirects.size}</td>\n  </tr>\n}\n}\n  </tbody>\n  </table>",
+      "language":"scala",
+      "collapsed":false,
+      "prompt_number":12,
+      "outputs":[]
+    },{
+      "cell_type":"code",
+      "input":"<script type=\"text/javascript\">Sortable.init()</script>",
+      "language":"scala",
+      "collapsed":false,
+      "prompt_number":13,
+      "outputs":[]
+    },{
+      "cell_type":"code",
+      "input":"",
+      "language":"scala",
+      "collapsed":false,
+      "outputs":[]
+    }]
+  }],
+  "nbformat":3
+}

@@ -23,6 +23,8 @@ resolvers += "NXParser repository" at "http://nxparser.googlecode.com/svn/reposi
 
 resolvers += "BBOP repository" at "http://code.berkeleybop.org/maven/repository"
 
+javaOptions += "-Xmx12G"
+
 libraryDependencies ++= {
   Seq(
       "junit"                  %   "junit"                         % "4.10" % "test",
