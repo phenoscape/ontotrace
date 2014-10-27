@@ -5,7 +5,7 @@ organization  := "org.phenoscape"
 
 name          := "ontotrace"
 
-version       := "1.0.2"
+version       := "1.0.3-SNAPSHOT"
 
 packageArchetype.java_application
 
