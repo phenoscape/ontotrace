@@ -3,9 +3,9 @@ import NativePackagerKeys._
 
 organization  := "org.phenoscape"
 
-name          := "presence-absence-matrix"
+name          := "ontotrace"
 
-version       := "1.0.2-SNAPSHOT"
+version       := "1.0.2"
 
 packageArchetype.java_application
 
