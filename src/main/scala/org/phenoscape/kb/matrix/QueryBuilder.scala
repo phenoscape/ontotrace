@@ -20,7 +20,8 @@ class QueryBuilder(owlReasoner: OWLReasoner) {
   val implies_presence_of_some = NamedRestrictionGenerator.getClassRelationIRI(IMPLIES_PRESENCE_OF.getIRI)
   val entity_term = factory.getOWLObjectProperty(IRI.create("http://example.org/entity_term"))
   val quality_term = factory.getOWLObjectProperty(IRI.create("http://example.org/quality_term"))
-
+  val denotes_exhibiting = factory.getOWLObjectProperty(IRI.create("http://purl.org/phenoscape/vocab.owl#denotes_exhibiting"))
+  
   def absenceQuery(anatomicalExpression: OWLClassExpression, taxonomicExpression: OWLClassExpression): Query =
     select_distinct('entity, 'entity_label, 'taxon, 'taxon_label, 'state, 'state_label, 'matrix_label, 'curated_entity, 'curated_quality) from "http://kb.phenoscape.org/" where (
       bgp(
@@ -29,15 +30,15 @@ class QueryBuilder(owlReasoner: OWLReasoner) {
         t('eq, Vocab.quality_term, 'curated_quality),
         t('absence, ABSENCE_OF, 'entity),
         t('entity, rdfsLabel, 'entity_label),
-        t('state, DENOTES_EXHIBITING / rdfType, 'eq),
+        t('state, denotes_exhibiting / rdfType, 'eq),
         t('state, dcDescription, 'state_label),
-        t('cell, HAS_STATE, 'state),
-        t('cell, BELONGS_TO_TU, 'otu),
-        t('otu, HAS_EXTERNAL_REFERENCE, 'taxon),
+        t('cell, has_state, 'state),
+        t('cell, belongs_to_TU, 'otu),
+        t('otu, has_external_reference, 'taxon),
         t('taxon, rdfsLabel, 'taxon_label),
-        t('matrix, HAS_CHARACTER, 'matrix_char),
+        t('matrix, has_character, 'matrix_char),
         t('matrix, rdfsLabel, 'matrix_label),
-        t('matrix_char, MAY_HAVE_STATE_VALUE, 'state)),
+        t('matrix_char, may_have_state_value, 'state)),
         subClassOf('entity, anatomicalExpression),
         subClassOf('taxon, taxonomicExpression))
 
@@ -49,15 +50,15 @@ class QueryBuilder(owlReasoner: OWLReasoner) {
         t('eq, Vocab.quality_term, 'curated_quality),
         t('presence, implies_presence_of_some, 'entity),
         t('entity, rdfsLabel, 'entity_label),
-        t('state, DENOTES_EXHIBITING / rdfType, 'eq),
+        t('state, denotes_exhibiting / rdfType, 'eq),
         t('state, dcDescription, 'state_label),
-        t('cell, HAS_STATE, 'state),
-        t('cell, BELONGS_TO_TU, 'otu),
-        t('otu, HAS_EXTERNAL_REFERENCE, 'taxon),
+        t('cell, has_state, 'state),
+        t('cell, belongs_to_TU, 'otu),
+        t('otu, has_external_reference, 'taxon),
         t('taxon, rdfsLabel, 'taxon_label),
-        t('matrix, HAS_CHARACTER, 'matrix_char),
+        t('matrix, has_character, 'matrix_char),
         t('matrix, rdfsLabel, 'matrix_label),
-        t('matrix_char, MAY_HAVE_STATE_VALUE, 'state)),
+        t('matrix_char, may_have_state_value, 'state)),
         subClassOf('entity, anatomicalExpression),
         subClassOf('taxon, taxonomicExpression))
 

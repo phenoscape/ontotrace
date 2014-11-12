@@ -35,7 +35,7 @@ libraryDependencies ++= {
       "com.bigdata"            %   "bigdata"                       % "1.3.2",
       "org.openrdf.sesame"     %   "sesame-queryresultio-text"     % "2.6.10",
       "org.phenoscape"         %   "scowl"                         % "0.8",
-      "org.phenoscape"         %   "kb-owl-tools"                  % "1.0.1",
+      "org.phenoscape"         %   "kb-owl-tools"                  % "1.0.3",
       "org.phenoscape"         %   "owlet"                         % "1.1.6",
       "org.phenoscape"         %   "phenex"                        % "1.15.4",
       "org.bbop"               %   "oboformat"                     % "0.5.5"

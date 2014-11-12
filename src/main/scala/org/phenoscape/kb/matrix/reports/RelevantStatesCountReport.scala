@@ -1,25 +1,51 @@
 package org.phenoscape.kb.matrix.reports
 
-import scala.concurrent.ExecutionContext.Implicits.global
-import scala.concurrent.Future
+import java.io.BufferedWriter
+import java.io.File
+import java.io.FileReader
+import java.io.FileWriter
+import java.util.Properties
+
+import org.openrdf.query.QueryLanguage
+import org.phenoscape.kb.matrix.SesameIterationIterator.iterationToIterator
 import org.phenoscape.owl.Vocab._
-import org.phenoscape.owlet.OwletManchesterSyntaxDataType.SerializableClassExpression
 import org.phenoscape.owlet.SPARQLComposer._
 import org.phenoscape.scowl.OWL._
+import org.semanticweb.elk.owlapi.ElkReasonerFactory
+import org.semanticweb.owlapi.apibinding.OWLManager
 import org.semanticweb.owlapi.model.IRI
 import org.semanticweb.owlapi.model.OWLClassExpression
+import org.semanticweb.owlapi.reasoner.InferenceType
+
+import com.bigdata.journal.Options
+import com.bigdata.rdf.sail.BigdataSail
+import com.bigdata.rdf.sail.BigdataSailRepository
 import com.hp.hpl.jena.query.Query
 import com.hp.hpl.jena.sparql.core.Var
 import com.hp.hpl.jena.sparql.expr.ExprVar
 import com.hp.hpl.jena.sparql.expr.aggregate.AggCountVarDistinct
-import com.hp.hpl.jena.query.ResultSet
-import scala.concurrent.blocking
-import com.hp.hpl.jena.sparql.engine.http.QueryEngineHTTP
-import com.hp.hpl.jena.query.ResultSetFactory
-import scala.concurrent.Await
-import scala.concurrent.duration.Duration
 
 object RelevantStatesCountReport extends App {
+
+  val propertiesFile = args(0)
+  val journalFile = args(1)
+  val tboxFile = args(2)
+  val resultFile = args(3)
+
+  val denotes_exhibiting = factory.getOWLObjectProperty(IRI.create("http://purl.org/phenoscape/vocab.owl#denotes_exhibiting"))
+
+  val bigdataProperties = new Properties()
+  bigdataProperties.load(new FileReader(propertiesFile))
+  bigdataProperties.setProperty(Options.FILE, new File(journalFile).getAbsolutePath)
+  val sail = new BigdataSail(bigdataProperties)
+  val repository = new BigdataSailRepository(sail)
+  repository.initialize()
+  val connection = repository.getReadOnlyConnection
+  connection.setAutoCommit(false)
+  val manager = OWLManager.createOWLOntologyManager()
+  val tbox = manager.loadOntologyFromOntologyDocument(new File(tboxFile))
+  implicit val reasoner = new ElkReasonerFactory().createReasoner(tbox)
+  reasoner.precomputeInferences(InferenceType.CLASS_HIERARCHY)
 
   val entities = Set(
     "anocleithrum" -> "http://purl.obolibrary.org/obo/UBERON_4000160",
@@ -143,34 +169,25 @@ object RelevantStatesCountReport extends App {
     "Whatcheeriidae" -> "http://purl.obolibrary.org/obo/VTO_9031049",
     "Youngolepis" -> "http://purl.obolibrary.org/obo/VTO_9008383")
 
-  def queryRelevantStateCounts(): Future[String] = {
+  private def query(): String = {
     val results = for {
       (entityLabel, entityIRI) <- entities
       (taxonLabel, taxonIRI) <- taxa
+      count <- queryEntry(entityIRI, taxonIRI)
     } yield {
-      queryEntry(entityIRI, taxonIRI).map { count =>
-        s"$taxonLabel\t$entityLabel\t$count"
-      }
+      s"$taxonLabel\t$entityLabel\t$count"
     }
-    Future.sequence(results).map { entries =>
-      entries.mkString("\n")
-    }
+    results.mkString("\n")
   }
 
-  private def queryEntry(entityIRI: String, taxonIRI: String): Future[String] = {
+  private def queryEntry(entityIRI: String, taxonIRI: String): Seq[String] = {
     val query = buildQuery(Class(taxonIRI), entityIRI)
-    for {
-      results <- executeSPARQLQuery(query)
-    } yield if (results.hasNext) results.next.getLiteral("count").getLexicalForm else "0"
-  }
-
-  private def executeSPARQLQuery(query: Query): Future[ResultSet] = Future {
-    blocking {
-      val queryEngine = new QueryEngineHTTP("http://kb-dev.phenoscape.org/bigsparql", query)
-      val resultSet = ResultSetFactory.copyResults(queryEngine.execSelect)
-      queryEngine.close()
-      resultSet
-    }
+    val bigdataQuery = connection.prepareTupleQuery(QueryLanguage.SPARQL, query.toString)
+    val result = bigdataQuery.evaluate
+    val results = (result.map(bindingSet =>
+      Option(bindingSet.getValue("count")).map(_.stringValue).getOrElse("0"))).toSeq
+    result.close()
+    results
   }
 
   //character states annotating the term or its parts
@@ -179,18 +196,19 @@ object RelevantStatesCountReport extends App {
     val entityInd = Individual(entityIRI)
     val query = select() from "http://kb.phenoscape.org/" where (
       bgp(
-        t('taxon, HAS_MEMBER / EXHIBITS / rdfType, 'phenotype),
-        t('state, DENOTES_EXHIBITING / rdfType, 'phenotype),
-        t('state, rdfType, STANDARD_STATE)),
-        service("http://pkb-new.nescent.org/owlery/kbs/phenoscape/sparql", bgp(
-          t('taxon, rdfsSubClassOf, taxonClass.asOMN))),
-        service("http://pkb-new.nescent.org/owlery/kbs/phenoscape/sparql", bgp(
-          t('phenotype, rdfsSubClassOf, ((IMPLIES_PRESENCE_OF some entityClass) or (TOWARDS value entityInd)).asOMN))))
+        t('taxon, has_member / EXHIBITS / rdfType, 'phenotype),
+        t('state, denotes_exhibiting / rdfType, 'phenotype)),
+        subClassOf('phenotype, (IMPLIES_PRESENCE_OF some entityClass) or (towards value entityInd)),
+        subClassOf('taxon, taxonClass))
     query.getProject.add(Var.alloc("count"), query.allocAggregate(new AggCountVarDistinct(new ExprVar("state"))))
     query
   }
 
-  val report = Await.ready(queryRelevantStateCounts(), Duration.Inf)
-  print(report)
+  val writer = new BufferedWriter(new FileWriter(new File(resultFile)))
+  writer.write(query())
+  writer.close()
+  reasoner.dispose()
+  connection.commit()
+  connection.close()
 
 }

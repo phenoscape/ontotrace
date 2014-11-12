@@ -83,7 +83,7 @@ object ConstructPresenceAbsenceMatrix extends App {
     throw new Exception("Unparsable taxonomic expression")
   }
   def createAssociation(result: BindingSet): Association = {
-    val presentOrAbsent = Set(Vocab.PRESENT.toString, Vocab.ABSENT.toString)
+    val presentOrAbsent = Set(Vocab.Present.getIRI.toString, Vocab.Absent.getIRI.toString)
     val direct = (result.getValue("entity") == result.getValue("curated_entity")) && (presentOrAbsent(result.getValue("curated_quality").stringValue))
     Association(result.getValue("entity").stringValue, result.getValue("entity_label").stringValue,
       result.getValue("taxon").stringValue, result.getValue("taxon_label").stringValue,
