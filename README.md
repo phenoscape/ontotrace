@@ -19,3 +19,6 @@ Ontotrace is written in Scala. To build it you must first have SBT installed. If
 To build a packaged version containing a runnable script and all dependencies, run `sbt stage`. This will create a relocatable folder at `target/universal/stage` which has executable scripts within `bin` and library dependencies within `lib`.
 
 To create an archive for release, run `sbt universal:packageZipTarball`. The archive will be created within `target/universal`.
+
+## Data
+Phenoscape Knowledgebase data dumps can be downloaded from [DataHub](http://datahub.io/dataset/phenoscape-kb). Before using Ontotrace you will need to load all the triples into [Bigdata](http://www.bigdata.com) and provide the Bigdata journal file as an argument.
