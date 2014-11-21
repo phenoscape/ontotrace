@@ -48,7 +48,7 @@ class QueryBuilder(owlReasoner: OWLReasoner) {
         t('eq, Vocab.quality_term, 'curated_quality),
         t('presence, implies_presence_of_some, 'entity),
         t('entity, rdfsLabel, 'entity_label),
-        t('state, denotes_exhibiting / rdfType, 'eq),
+        t('state, describes_phenotype, 'eq),
         t('state, dcDescription, 'state_label),
         t('taxon, exhibits_state, 'state),
         t('taxon, rdfsLabel, 'taxon_label),
