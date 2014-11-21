@@ -196,8 +196,8 @@ object RelevantStatesCountReport extends App {
     val entityInd = Individual(entityIRI)
     val query = select() from "http://kb.phenoscape.org/" where (
       bgp(
-        t('taxon, has_member / EXHIBITS / rdfType, 'phenotype),
-        t('state, denotes_exhibiting / rdfType, 'phenotype)),
+        t('taxon, exhibits_state, 'state),
+        t('state, describes_phenotype, 'phenotype)),
         subClassOf('phenotype, (IMPLIES_PRESENCE_OF some entityClass) or (towards value entityInd)),
         subClassOf('taxon, taxonClass))
     query.getProject.add(Var.alloc("count"), query.allocAggregate(new AggCountVarDistinct(new ExprVar("state"))))
