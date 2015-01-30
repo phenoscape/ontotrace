@@ -45,6 +45,8 @@ import java.util.UUID
 import java.util.Date
 import org.phenoscape.model.AssociationSupport
 import org.phenoscape.owl.Vocab
+import java.text.SimpleDateFormat
+import java.util.Calendar
 
 object ConstructPresenceAbsenceMatrix extends App {
 
@@ -53,8 +55,8 @@ object ConstructPresenceAbsenceMatrix extends App {
 
   val informative = args(0) match {
     case "--informative" => true
-    case "--all" => false
-    case _ => throw new Exception("Must specify --informative or --all")
+    case "--all"         => false
+    case _               => throw new Exception("Must specify --informative or --all")
   }
   val propertiesFile = args(1)
   val journalFile = args(2)
@@ -76,10 +78,12 @@ object ConstructPresenceAbsenceMatrix extends App {
   val reasoner: OWLReasoner = new ElkReasonerFactory().createReasoner(tbox)
   reasoner.precomputeInferences(InferenceType.CLASS_HIERARCHY)
   val builder = new QueryBuilder(reasoner)
-  val anatomicalExpression = ManchesterSyntaxClassExpressionParser.parse(Source.fromFile(anatomicalExpressionFile, "utf-8").mkString).getOrElse {
+  val anatomyString = Source.fromFile(anatomicalExpressionFile, "utf-8").mkString
+  val taxonString = Source.fromFile(taxonomicExpressionFile, "utf-8").mkString
+  val anatomicalExpression = ManchesterSyntaxClassExpressionParser.parse(anatomyString).getOrElse {
     throw new Exception("Unparsable anatomy expression")
   }
-  val taxonomicExpression = ManchesterSyntaxClassExpressionParser.parse(Source.fromFile(taxonomicExpressionFile, "utf-8").mkString).getOrElse {
+  val taxonomicExpression = ManchesterSyntaxClassExpressionParser.parse(taxonString).getOrElse {
     throw new Exception("Unparsable taxonomic expression")
   }
   def createAssociation(result: BindingSet): Association = {
@@ -141,9 +145,9 @@ object ConstructPresenceAbsenceMatrix extends App {
     val currentState = dataset.getStateForTaxon(taxon, character)
     val stateToAssign = currentState match {
       case polymorphic: MultipleState => addStateToMultiState(polymorphic, state)
-      case `state` => state
-      case null => state
-      case _ => new MultipleState(Set(currentState, state), MODE.POLYMORPHIC)
+      case `state`                    => state
+      case null                       => state
+      case _                          => new MultipleState(Set(currentState, state), MODE.POLYMORPHIC)
     }
     dataset.setStateForTaxon(taxon, character, stateToAssign)
     val supports = dataset.getAssociationSupport.getOrElseUpdate(new org.phenoscape.model.Association(taxon.getNexmlID, character.getNexmlID, state.getNexmlID), mutable.Set[AssociationSupport]())
@@ -159,7 +163,8 @@ object ConstructPresenceAbsenceMatrix extends App {
     inferredAbsenceAssociations foreach (mergeIntoMatrix(_, Absence))
     inferredPresenceAssociations foreach (mergeIntoMatrix(_, Presence))
   }
-
+  val date = new SimpleDateFormat("y-M-d").format(Calendar.getInstance.getTime)
+  dataset.setPublicationNotes(s"Generated on $date by Ontotrace query:\n* taxa: $taxonString\n* entities: $anatomyString")
   val writer = new NeXMLWriter(UUID.randomUUID.toString);
   writer.setDataSet(dataset);
   writer.write(new File(resultFile));
