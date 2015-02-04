@@ -18,10 +18,7 @@ class QueryBuilder(owlReasoner: OWLReasoner) {
   val factory = OWLManager.getOWLDataFactory
   val rdfsSubClassOf = factory.getOWLObjectProperty(OWLRDFVocabulary.RDFS_SUBCLASS_OF.getIRI)
   val implies_presence_of_some = NamedRestrictionGenerator.getClassRelationIRI(IMPLIES_PRESENCE_OF.getIRI)
-  val entity_term = factory.getOWLObjectProperty(IRI.create("http://example.org/entity_term"))
-  val quality_term = factory.getOWLObjectProperty(IRI.create("http://example.org/quality_term"))
-  val denotes_exhibiting = factory.getOWLObjectProperty(IRI.create("http://purl.org/phenoscape/vocab.owl#denotes_exhibiting"))
-  
+
   def absenceQuery(anatomicalExpression: OWLClassExpression, taxonomicExpression: OWLClassExpression): Query =
     select_distinct('entity, 'entity_label, 'taxon, 'taxon_label, 'state, 'state_label, 'matrix_label, 'curated_entity, 'curated_quality) from "http://kb.phenoscape.org/" where (
       bgp(
