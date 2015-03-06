@@ -5,15 +5,15 @@ organization  := "org.phenoscape"
 
 name          := "ontotrace"
 
-version       := "1.0.4-SNAPSHOT"
+version       := "1.0.4"
 
 packageArchetype.java_application
 
 mainClass in Compile := Some("org.phenoscape.kb.matrix.ConstructPresenceAbsenceMatrix")
 
-scalaVersion  := "2.10.4"
+scalaVersion  := "2.11.6"
 
-scalacOptions := Seq("-unchecked", "-deprecation", "-encoding", "utf8")
+scalacOptions := Seq("-unchecked", "-deprecation", "-feature", "-encoding", "utf8")
 
 resolvers += "Phenoscape Maven repository" at "http://phenoscape.svn.sourceforge.net/svnroot/phenoscape/trunk/maven/repository"
 
@@ -34,9 +34,9 @@ libraryDependencies ++= {
       "org.semanticweb.elk"    %   "elk-owlapi"                    % "0.4.1",
       "com.bigdata"            %   "bigdata"                       % "1.3.2",
       "org.openrdf.sesame"     %   "sesame-queryresultio-text"     % "2.6.10",
-      "org.phenoscape"         %   "scowl"                         % "0.8",
-      "org.phenoscape"         %   "kb-owl-tools"                  % "1.0.3",
-      "org.phenoscape"         %   "owlet"                         % "1.1.6",
+      "org.phenoscape"         %   "scowl"                         % "0.9",
+      "org.phenoscape"         %   "kb-owl-tools"                  % "1.1",
+      "org.phenoscape"         %   "owlet"                         % "1.3",
       "org.phenoscape"         %   "phenex"                        % "1.15.4",
       "org.bbop"               %   "oboformat"                     % "0.5.5"
   )

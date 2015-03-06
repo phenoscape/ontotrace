@@ -1,5 +1,7 @@
 package org.phenoscape.kb.matrix
 
+import scala.language.implicitConversions
+
 import info.aduna.iteration.Iteration
 
 class SesameIterationIterator[A, B <: Exception](iteration: Iteration[A, B]) extends Iterator[A] {
