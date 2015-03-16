@@ -31,7 +31,7 @@ libraryDependencies ++= {
       "org.apache.commons"     %   "commons-lang3"                 % "3.1",
       "commons-io"             %   "commons-io"                    % "2.4",
       "net.sourceforge.owlapi" %   "owlapi-distribution"           % "3.5.0",
-      "org.semanticweb.elk"    %   "elk-owlapi"                    % "0.4.1",
+      "org.semanticweb.elk"    %   "elk-owlapi"                    % "0.4.2",
       "com.bigdata"            %   "bigdata"                       % "1.3.2",
       "org.openrdf.sesame"     %   "sesame-queryresultio-text"     % "2.6.10",
       "org.phenoscape"         %   "scowl"                         % "0.9",
