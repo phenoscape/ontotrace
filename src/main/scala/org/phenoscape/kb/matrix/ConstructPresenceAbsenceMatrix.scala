@@ -47,6 +47,9 @@ import org.phenoscape.model.AssociationSupport
 import org.phenoscape.owl.Vocab
 import java.text.SimpleDateFormat
 import java.util.Calendar
+import org.semanticweb.owlapi.model.OWLClass
+import org.semanticweb.owlapi.model.IRI
+import org.semanticweb.owlapi.model.OWLOntology
 
 object ConstructPresenceAbsenceMatrix extends App {
 
@@ -65,6 +68,15 @@ object ConstructPresenceAbsenceMatrix extends App {
   val taxonomicExpressionFile = args(5)
   val resultFile = args(6)
 
+  val anatomyString = Source.fromFile(anatomicalExpressionFile, "utf-8").mkString
+  val taxonString = Source.fromFile(taxonomicExpressionFile, "utf-8").mkString
+  val anatomicalExpression = ManchesterSyntaxClassExpressionParser.parse(anatomyString).getOrElse {
+    throw new Exception("Unparsable anatomy expression")
+  }
+  val taxonomicExpression = ManchesterSyntaxClassExpressionParser.parse(taxonString).getOrElse {
+    throw new Exception("Unparsable taxonomic expression")
+  }
+
   val bigdataProperties = new Properties()
   bigdataProperties.load(new FileReader(propertiesFile))
   bigdataProperties.setProperty(Options.FILE, new File(journalFile).getAbsolutePath)
@@ -74,18 +86,14 @@ object ConstructPresenceAbsenceMatrix extends App {
   val connection = repository.getReadOnlyConnection
   connection.setAutoCommit(false)
   val manager = OWLManager.createOWLOntologyManager()
+  val factory = OWLManager.getOWLDataFactory
   val tbox = manager.loadOntologyFromOntologyDocument(new File(tboxFile))
+  val anatomyQuery = addQueryAsClass(anatomicalExpression, tbox)
+  val taxonomicQuery = addQueryAsClass(taxonomicExpression, tbox)
   val reasoner: OWLReasoner = new ElkReasonerFactory().createReasoner(tbox)
   reasoner.precomputeInferences(InferenceType.CLASS_HIERARCHY)
   val builder = new QueryBuilder(reasoner)
-  val anatomyString = Source.fromFile(anatomicalExpressionFile, "utf-8").mkString
-  val taxonString = Source.fromFile(taxonomicExpressionFile, "utf-8").mkString
-  val anatomicalExpression = ManchesterSyntaxClassExpressionParser.parse(anatomyString).getOrElse {
-    throw new Exception("Unparsable anatomy expression")
-  }
-  val taxonomicExpression = ManchesterSyntaxClassExpressionParser.parse(taxonString).getOrElse {
-    throw new Exception("Unparsable taxonomic expression")
-  }
+
   def createAssociation(result: BindingSet): Association = {
     val presentOrAbsent = Set(Vocab.Present.getIRI.toString, Vocab.Absent.getIRI.toString)
     val direct = (result.getValue("entity") == result.getValue("curated_entity")) && (presentOrAbsent(result.getValue("curated_quality").stringValue))
@@ -95,7 +103,7 @@ object ConstructPresenceAbsenceMatrix extends App {
       result.getValue("matrix_label").stringValue, direct)
   }
   def runQuery(queryBuilder: (OWLClassExpression, OWLClassExpression) => Query): Set[Association] = {
-    val builtQuery = queryBuilder(anatomicalExpression, taxonomicExpression)
+    val builtQuery = queryBuilder(anatomyQuery, taxonomicQuery)
     val bigdataQuery = connection.prepareTupleQuery(QueryLanguage.SPARQL, builtQuery.toString)
     val result = bigdataQuery.evaluate
     val associations = (result map createAssociation).toSet
@@ -168,5 +176,15 @@ object ConstructPresenceAbsenceMatrix extends App {
   val writer = new NeXMLWriter(UUID.randomUUID.toString);
   writer.setDataSet(dataset);
   writer.write(new File(resultFile));
+
+  def addQueryAsClass(expression: OWLClassExpression, ontology: OWLOntology): OWLClass = expression match {
+    case named: OWLClass => named
+    case anonymous => {
+      val manager = ontology.getOWLOntologyManager
+      val namedQuery = factory.getOWLClass(IRI.create(s"http://example.org/${UUID.randomUUID.toString}"))
+      manager.addAxiom(ontology, factory.getOWLEquivalentClassesAxiom(namedQuery, expression))
+      namedQuery
+    }
+  }
 
 }
