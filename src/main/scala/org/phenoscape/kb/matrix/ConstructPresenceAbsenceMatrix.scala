@@ -56,11 +56,8 @@ object ConstructPresenceAbsenceMatrix extends App {
   BasicConfigurator.configure()
   Logger.getRootLogger().setLevel(Level.WARN)
 
-  val informative = args(0) match {
-    case "--informative" => true
-    case "--all"         => false
-    case _               => throw new Exception("Must specify --informative or --all")
-  }
+  val informative = args.take(2).contains("--informative")
+  val includeSupportingStates = args.take(2).contains("--include-supporting-states")
   val propertiesFile = args(1)
   val journalFile = args(2)
   val tboxFile = args(3)
@@ -158,8 +155,10 @@ object ConstructPresenceAbsenceMatrix extends App {
       case _                          => new MultipleState(Set(currentState, state), MODE.POLYMORPHIC)
     }
     dataset.setStateForTaxon(taxon, character, stateToAssign)
-    val supports = dataset.getAssociationSupport.getOrElseUpdate(new org.phenoscape.model.Association(taxon.getNexmlID, character.getNexmlID, state.getNexmlID), mutable.Set[AssociationSupport]())
-    supports.add(new AssociationSupport(association.stateLabel, association.matrixLabel, association.direct))
+    if (includeSupportingStates) {
+      val supports = dataset.getAssociationSupport.getOrElseUpdate(new org.phenoscape.model.Association(taxon.getNexmlID, character.getNexmlID, state.getNexmlID), mutable.Set[AssociationSupport]())
+      supports.add(new AssociationSupport(association.stateLabel, association.matrixLabel, association.direct))
+    }
   }
   if (informative) {
     val absentEntities = inferredAbsenceAssociations map (_.entity)
