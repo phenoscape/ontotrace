@@ -56,14 +56,14 @@ object ConstructPresenceAbsenceMatrix extends App {
   BasicConfigurator.configure()
   Logger.getRootLogger().setLevel(Level.WARN)
 
-  val informative = args.take(2).contains("--informative")
-  val includeSupportingStates = args.take(2).contains("--include-supporting-states")
-  val propertiesFile = args(1)
-  val journalFile = args(2)
-  val tboxFile = args(3)
-  val anatomicalExpressionFile = args(4)
-  val taxonomicExpressionFile = args(5)
-  val resultFile = args(6)
+  val informative = args.take(2).contains("--informative") // --all
+  val includeSupportingStates = args.take(2).contains("--include-supporting-states") // --exclude-supporting-states
+  val propertiesFile = args(2)
+  val journalFile = args(3)
+  val tboxFile = args(4)
+  val anatomicalExpressionFile = args(5)
+  val taxonomicExpressionFile = args(6)
+  val resultFile = args(7)
 
   val anatomyString = Source.fromFile(anatomicalExpressionFile, "utf-8").mkString
   val taxonString = Source.fromFile(taxonomicExpressionFile, "utf-8").mkString
