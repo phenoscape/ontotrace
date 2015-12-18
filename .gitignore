@@ -1,3 +1,10 @@
 .cache
 target
 .DS_Store
+bin/
+.akka-cookie
+.cache-main
+.classpath
+.settings/org.eclipse.core.resources.prefs
+.settings/org.scala-ide.sdt.core.prefs
+logs/

@@ -32,12 +32,12 @@ libraryDependencies ++= {
       "commons-io"             %   "commons-io"                    % "2.4",
       "net.sourceforge.owlapi" %   "owlapi-distribution"           % "3.5.0",
       "org.semanticweb.elk"    %   "elk-owlapi"                    % "0.4.2",
-      "com.bigdata"            %   "bigdata"                       % "1.3.2",
+      "com.bigdata"            %   "bigdata"                       % "1.3.4",
       "org.openrdf.sesame"     %   "sesame-queryresultio-text"     % "2.6.10",
-      "org.phenoscape"         %   "scowl"                         % "0.9",
-      "org.phenoscape"         %   "kb-owl-tools"                  % "1.1",
+      "org.phenoscape"         %   "scowl"                         % "0.9.2",
+      "org.phenoscape"         %%  "kb-owl-tools"                  % "1.4.1",
       "org.phenoscape"         %   "owlet"                         % "1.3",
-      "org.phenoscape"         %   "phenex"                        % "1.15.4",
+      "org.phenoscape"         %   "phenex"                        % "1.17.2",
       "org.bbop"               %   "oboformat"                     % "0.5.5"
   )
 }
