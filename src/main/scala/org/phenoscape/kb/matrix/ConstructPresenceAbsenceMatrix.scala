@@ -125,13 +125,15 @@ object ConstructPresenceAbsenceMatrix extends App {
   case object Absence extends PresenceAbsence("0", "absent")
   case object Presence extends PresenceAbsence("1", "present")
   def mergeIntoMatrix(association: Association, presenceAbsence: PresenceAbsence): Unit = {
-    val character = characters.getOrElseUpdate(association.entity, {
-      val newChar = new Character(association.entity)
+    val characterID = unOBO(association.entity)
+    val character = characters.getOrElseUpdate(characterID, {
+      val newChar = new Character(characterID)
       newChar.setLabel(association.entityLabel)
+      newChar.setDenotes(URI.create(association.entity))
       dataset.addCharacter(newChar)
       newChar
     })
-    val stateID = s"${association.entity}#${presenceAbsence.symbol}"
+    val stateID = s"${unOBO(association.entity)}_${presenceAbsence.symbol}"
     val state = states.getOrElseUpdate(stateID, {
       val newState = new State(stateID)
       newState.setSymbol(presenceAbsence.symbol)
@@ -139,8 +141,9 @@ object ConstructPresenceAbsenceMatrix extends App {
       newState
     })
     if (!character.getStates.contains(state)) character.addState(state)
-    val taxon = taxa.getOrElseUpdate(association.taxon, {
-      val newTaxon = new Taxon(association.taxon)
+    val matrixTaxonID = unOBO(association.taxon)
+    val taxon = taxa.getOrElseUpdate(matrixTaxonID, {
+      val newTaxon = new Taxon(matrixTaxonID)
       newTaxon.setPublicationName(association.taxonLabel)
       val oboID = NeXMLUtil.oboID(URI.create(association.taxon))
       newTaxon.setValidName(new OBOClassImpl(oboID))
@@ -175,6 +178,8 @@ object ConstructPresenceAbsenceMatrix extends App {
   val writer = new NeXMLWriter(UUID.randomUUID.toString);
   writer.setDataSet(dataset);
   writer.write(new File(resultFile));
+
+  private def unOBO(uri: String): String = uri.replaceAllLiterally("http://purl.obolibrary.org/obo/", "")
 
   def addQueryAsClass(expression: OWLClassExpression, ontology: OWLOntology): OWLClass = expression match {
     case named: OWLClass => named
