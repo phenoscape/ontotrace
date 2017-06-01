@@ -6,11 +6,15 @@ import java.io.FileReader
 import java.io.FileWriter
 import java.util.Properties
 
+import org.apache.jena.query.Query
+import org.apache.jena.sparql.core.Var
+import org.apache.jena.sparql.expr.ExprVar
+import org.apache.jena.sparql.expr.aggregate.AggCountVarDistinct
 import org.openrdf.query.QueryLanguage
 import org.phenoscape.kb.matrix.SesameIterationIterator.iterationToIterator
 import org.phenoscape.owl.Vocab._
 import org.phenoscape.owlet.SPARQLComposer._
-import org.phenoscape.scowl.OWL._
+import org.phenoscape.scowl._
 import org.semanticweb.elk.owlapi.ElkReasonerFactory
 import org.semanticweb.owlapi.apibinding.OWLManager
 import org.semanticweb.owlapi.model.IRI
@@ -20,10 +24,6 @@ import org.semanticweb.owlapi.reasoner.InferenceType
 import com.bigdata.journal.Options
 import com.bigdata.rdf.sail.BigdataSail
 import com.bigdata.rdf.sail.BigdataSailRepository
-import com.hp.hpl.jena.query.Query
-import com.hp.hpl.jena.sparql.core.Var
-import com.hp.hpl.jena.sparql.expr.ExprVar
-import com.hp.hpl.jena.sparql.expr.aggregate.AggCountVarDistinct
 
 object RelevantStatesCountReport extends App {
 
@@ -32,7 +32,7 @@ object RelevantStatesCountReport extends App {
   val tboxFile = args(2)
   val resultFile = args(3)
 
-  val denotes_exhibiting = factory.getOWLObjectProperty(IRI.create("http://purl.org/phenoscape/vocab.owl#denotes_exhibiting"))
+  val denotes_exhibiting = ObjectProperty("http://purl.org/phenoscape/vocab.owl#denotes_exhibiting")
 
   val bigdataProperties = new Properties()
   bigdataProperties.load(new FileReader(propertiesFile))

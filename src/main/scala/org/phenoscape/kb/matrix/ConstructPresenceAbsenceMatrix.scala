@@ -1,55 +1,48 @@
 package org.phenoscape.kb.matrix
 
-import java.io.BufferedOutputStream
 import java.io.File
-import java.io.FileOutputStream
 import java.io.FileReader
+import java.net.URI
+import java.text.SimpleDateFormat
+import java.util.Calendar
 import java.util.Properties
+import java.util.UUID
+
+import scala.collection.JavaConversions._
+import scala.collection.mutable
 import scala.io.Source
+
+import org.apache.jena.query.Query
 import org.apache.log4j.BasicConfigurator
 import org.apache.log4j.Level
 import org.apache.log4j.Logger
-import org.openrdf.query.BooleanQuery
-import org.openrdf.query.GraphQuery
+import org.obo.datamodel.impl.OBOClassImpl
+import org.openrdf.query.BindingSet
 import org.openrdf.query.QueryLanguage
-import org.openrdf.query.TupleQuery
-import org.openrdf.query.resultio.text.tsv.SPARQLResultsTSVWriterFactory
+import org.phenoscape.io.NeXMLUtil
+import org.phenoscape.io.NeXMLWriter
+import org.phenoscape.kb.matrix.SesameIterationIterator.iterationToIterator
+import org.phenoscape.model.AssociationSupport
+import org.phenoscape.model.Character
+import org.phenoscape.model.DataSet
+import org.phenoscape.model.MultipleState
+import org.phenoscape.model.MultipleState.MODE
+import org.phenoscape.model.State
+import org.phenoscape.model.Taxon
+import org.phenoscape.owl.Vocab
+import org.phenoscape.owlet.ManchesterSyntaxClassExpressionParser
+import org.semanticweb.elk.owlapi.ElkReasonerFactory
+import org.semanticweb.owlapi.apibinding.OWLManager
+import org.semanticweb.owlapi.model.IRI
+import org.semanticweb.owlapi.model.OWLClass
+import org.semanticweb.owlapi.model.OWLClassExpression
+import org.semanticweb.owlapi.model.OWLOntology
+import org.semanticweb.owlapi.reasoner.InferenceType
+import org.semanticweb.owlapi.reasoner.OWLReasoner
+
 import com.bigdata.journal.Options
 import com.bigdata.rdf.sail.BigdataSail
 import com.bigdata.rdf.sail.BigdataSailRepository
-import com.bigdata.rdf.sail.BigdataSailUpdate
-import org.semanticweb.owlapi.reasoner.OWLReasoner
-import org.semanticweb.owlapi.apibinding.OWLManager
-import org.semanticweb.elk.owlapi.ElkReasonerFactory
-import org.semanticweb.owlapi.reasoner.InferenceType
-import org.phenoscape.owlet.ManchesterSyntaxClassExpressionParser
-import info.aduna.iteration.Iteration
-import org.openrdf.query.TupleQueryResult
-import scala.collection.JavaConversions._
-import org.phenoscape.kb.matrix.SesameIterationIterator.iterationToIterator
-import org.openrdf.query.BindingSet
-import org.semanticweb.owlapi.model.OWLClassExpression
-import com.hp.hpl.jena.query.Query
-import org.phenoscape.model.DataSet
-import scala.collection.mutable
-import org.phenoscape.model.Taxon
-import org.phenoscape.model.State
-import org.phenoscape.model.Character
-import org.phenoscape.model.MultipleState
-import org.phenoscape.io.NeXMLUtil
-import org.phenoscape.model.MultipleState.MODE
-import java.net.URI
-import org.obo.datamodel.impl.OBOClassImpl
-import org.phenoscape.io.NeXMLWriter
-import java.util.UUID
-import java.util.Date
-import org.phenoscape.model.AssociationSupport
-import org.phenoscape.owl.Vocab
-import java.text.SimpleDateFormat
-import java.util.Calendar
-import org.semanticweb.owlapi.model.OWLClass
-import org.semanticweb.owlapi.model.IRI
-import org.semanticweb.owlapi.model.OWLOntology
 
 object ConstructPresenceAbsenceMatrix extends App {
 
@@ -80,8 +73,7 @@ object ConstructPresenceAbsenceMatrix extends App {
   val sail = new BigdataSail(bigdataProperties)
   val repository = new BigdataSailRepository(sail)
   repository.initialize()
-  val connection = repository.getReadOnlyConnection
-  connection.setAutoCommit(false)
+  val connection = repository.getUnisolatedConnection
   val manager = OWLManager.createOWLOntologyManager()
   val factory = OWLManager.getOWLDataFactory
   val tbox = manager.loadOntologyFromOntologyDocument(new File(tboxFile))
@@ -115,7 +107,6 @@ object ConstructPresenceAbsenceMatrix extends App {
   val inferredAbsenceAssociations = runQuery(builder.absenceQuery)
   val inferredPresenceAssociations = runQuery(builder.presenceQuery)
   reasoner.dispose()
-  connection.commit()
   connection.close()
   val characters: mutable.Map[String, Character] = mutable.Map()
   val states: mutable.Map[String, State] = mutable.Map()

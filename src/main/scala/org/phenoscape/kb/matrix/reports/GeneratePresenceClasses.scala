@@ -1,25 +1,27 @@
 package org.phenoscape.kb.matrix.reports
 
+import java.io.File
+
+import scala.collection.JavaConversions._
+
+import org.phenoscape.scowl._
+import org.semanticweb.elk.owlapi.ElkReasonerFactory
 import org.semanticweb.owlapi.apibinding.OWLManager
 import org.semanticweb.owlapi.model.IRI
-import org.phenoscape.scowl.OWL._
-import org.semanticweb.elk.owlapi.ElkReasonerFactory
-import scala.collection.JavaConversions._
-import org.semanticweb.owlapi.model.OWLEntity
 import org.semanticweb.owlapi.model.OWLAnnotationProperty
-import org.semanticweb.owlapi.model.OWLOntology
+import org.semanticweb.owlapi.model.OWLEntity
 import org.semanticweb.owlapi.model.OWLLiteral
-import java.io.File
+import org.semanticweb.owlapi.model.OWLOntology
 
 object GeneratePresenceClasses extends App {
 
   val outputFile = args(0)
 
   def annotationsFor(obj: OWLEntity, property: OWLAnnotationProperty, ont: OWLOntology): Iterable[String] =
-    obj.getAnnotations(ont, property).map(_.getValue).collect(
+    ont.getAnnotationAssertionAxioms(obj.getIRI).filter(_.getProperty == property).map(_.getValue).collect(
       { case literal: OWLLiteral => literal.getLiteral.toString })
 
-  def labelFor(obj: OWLEntity, ont: OWLOntology): Option[String] = annotationsFor(obj, factory.getRDFSLabel, ont).headOption
+  def labelFor(obj: OWLEntity, ont: OWLOntology): Option[String] = annotationsFor(obj, RDFSLabel, ont).headOption
 
   val AnatomicalEntity = Class("http://purl.obolibrary.org/obo/UBERON_0001062")
   val rdfsLabel = OWLManager.getOWLDataFactory.getRDFSLabel
@@ -37,5 +39,5 @@ object GeneratePresenceClasses extends App {
     presenceTerm Annotation (rdfsLabel, s"presence of $termLabel"))
   val presences = manager.createOntology(axioms.flatten)
   manager.saveOntology(presences, IRI.create(new File(outputFile)))
-  
+
 }
