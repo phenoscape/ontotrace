@@ -43,6 +43,8 @@ import org.semanticweb.owlapi.reasoner.OWLReasoner
 import com.bigdata.journal.Options
 import com.bigdata.rdf.sail.BigdataSail
 import com.bigdata.rdf.sail.BigdataSailRepository
+import scalaz.Success
+import org.phenoscape.scowl._
 
 object ConstructPresenceAbsenceMatrix extends App {
 
@@ -58,14 +60,8 @@ object ConstructPresenceAbsenceMatrix extends App {
   val taxonomicExpressionFile = args(6)
   val resultFile = args(7)
 
-  val anatomyString = Source.fromFile(anatomicalExpressionFile, "utf-8").mkString
-  val taxonString = Source.fromFile(taxonomicExpressionFile, "utf-8").mkString
-  val anatomicalExpression = ManchesterSyntaxClassExpressionParser.parse(anatomyString).getOrElse {
-    throw new Exception("Unparsable anatomy expression")
-  }
-  val taxonomicExpression = ManchesterSyntaxClassExpressionParser.parse(taxonString).getOrElse {
-    throw new Exception("Unparsable taxonomic expression")
-  }
+  val anatomySource = Source.fromFile(anatomicalExpressionFile, "utf-8").mkString
+  val taxonSource = Source.fromFile(taxonomicExpressionFile, "utf-8").mkString
 
   val bigdataProperties = new Properties()
   bigdataProperties.load(new FileReader(propertiesFile))
@@ -77,8 +73,15 @@ object ConstructPresenceAbsenceMatrix extends App {
   val manager = OWLManager.createOWLOntologyManager()
   val factory = OWLManager.getOWLDataFactory
   val tbox = manager.loadOntologyFromOntologyDocument(new File(tboxFile))
-  val anatomyQuery = addQueryAsClass(anatomicalExpression, tbox)
-  val taxonomicQuery = addQueryAsClass(taxonomicExpression, tbox)
+
+  val anatomicalScope = ManchesterSyntaxClassExpressionParser.parse(anatomySource.mkString).map { expression =>
+    val anatomyQuery = addQueryAsClass(expression, tbox)
+    LogicalScope(anatomyQuery)
+  }.getOrElse(ListScope(anatomySource.lines.map(term => Class(term.trim)).toSet))
+  val taxonomicScope = ManchesterSyntaxClassExpressionParser.parse(taxonSource.mkString).map { expression =>
+    val taxonomicQuery = addQueryAsClass(expression, tbox)
+    LogicalScope(taxonomicQuery)
+  }.getOrElse(ListScope(taxonSource.lines.map(term => Class(term.trim)).toSet))
   val reasoner: OWLReasoner = new ElkReasonerFactory().createReasoner(tbox)
   reasoner.precomputeInferences(InferenceType.CLASS_HIERARCHY)
   val builder = new QueryBuilder(reasoner)
@@ -91,8 +94,8 @@ object ConstructPresenceAbsenceMatrix extends App {
       result.getValue("state").stringValue, result.getValue("state_label").stringValue,
       result.getValue("matrix_label").stringValue, direct)
   }
-  def runQuery(queryBuilder: (OWLClassExpression, OWLClassExpression) => Query): Set[Association] = {
-    val builtQuery = queryBuilder(anatomyQuery, taxonomicQuery)
+  def runQuery(queryBuilder: (TermScope, TermScope) => Query): Set[Association] = {
+    val builtQuery = queryBuilder(anatomicalScope, taxonomicScope)
     val bigdataQuery = connection.prepareTupleQuery(QueryLanguage.SPARQL, builtQuery.toString)
     val result = bigdataQuery.evaluate
     val associations = (result map createAssociation).toSet
@@ -165,7 +168,7 @@ object ConstructPresenceAbsenceMatrix extends App {
     inferredPresenceAssociations foreach (mergeIntoMatrix(_, Presence))
   }
   val date = new SimpleDateFormat("y-M-d").format(Calendar.getInstance.getTime)
-  dataset.setPublicationNotes(s"Generated on $date by Ontotrace query:\n* taxa: $taxonString\n* entities: $anatomyString")
+  dataset.setPublicationNotes(s"Generated on $date by Ontotrace query:\n* taxa: $taxonomicScope\n* entities: $anatomicalScope")
   val writer = new NeXMLWriter(UUID.randomUUID.toString);
   writer.setDataSet(dataset);
   writer.write(new File(resultFile));
