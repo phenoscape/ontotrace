@@ -23,7 +23,6 @@ class QueryBuilder(owlReasoner: OWLReasoner) {
   val implies_presence_of_some = NamedRestrictionGenerator.getClassRelationIRI(IMPLIES_PRESENCE_OF.getIRI)
 
   def absenceQuery(anatomicalTerms: TermScope, taxonomicTerms: TermScope): Query = {
-    val anatomicalExpression: OWLClassExpression = ???
     select_distinct('entity, 'entity_label, 'taxon, 'taxon_label, 'state, 'state_label, 'matrix_label, 'curated_entity, 'curated_quality) from "http://kb.phenoscape.org/" where (
       bgp(
         t('eq, rdfsSubClassOf*, 'absence),
